@@ -43,26 +43,20 @@ class UsuarioController
 
     public function login()
     {
-        //session_start();
+        session_start();
         $nombreUsuario = $_POST['nombre_usuario'];
         $contrasena = $_POST['contrasena'];
         $usuarioLogin = $this->usuario->login($nombreUsuario);
         if ($usuarioLogin != null && password_verify($contrasena, $usuarioLogin['contrasena'])) {
-            /*
             $_SESSION['nombreUsuario'] = $usuarioLogin['nombre'];
             $_SESSION['apellidoUsuario'] = $usuarioLogin['apellido'];
-            $_SESSION['username'] = $usuarioLogin['nombreUsuario'];
+            $_SESSION['username'] = $usuarioLogin['nombre_usuario'];
             $_SESSION['rol'] = $usuarioLogin['rol'];
             header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
             exit();
-            */
-            $this->vistaSuperAdmin();
         } else {
-            /*
             header("Location: ?controlador=Usuario&accion=formularioLogin");
             exit();
-            */
-            $this->formularioLogin();
         }
     }
 
@@ -81,6 +75,19 @@ class UsuarioController
 
     public function vistaSuperAdmin()
     {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            header("Location: ?");
+            exit();
+        }
         $this->view->show("superAdminView.php", null);
+    }
+
+    public function cerrarSesion()
+    {
+        session_start();
+        session_destroy();
+        header("Location: ?");
+        exit();
     }
 } // fin clase

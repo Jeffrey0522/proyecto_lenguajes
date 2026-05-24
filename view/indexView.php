@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+include_once 'public/header.php';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto Lenguajes</title>
-</head>
+<section>
+    
+</section>
 
-<body>
-    <h1>Proyecto Lenguajes</h1>
-</body>
-
-</html>
+<?php
+include_once 'public/footer.php';
+?>

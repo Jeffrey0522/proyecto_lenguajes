@@ -20,10 +20,10 @@ class UsuarioModel
         return $resultado;
     } // listar
 
-    public function registrarSuperAdmin($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasena)
+    public function registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasena, $rol)
     {
         $consulta = $this->db->prepare("call sp_registrar_usuario(?, ?, ?, ?, ?, ?, ?)");
-        $params = array($cedula, $nombre, $apellido, $correo, $contrasena, 1, $nombreUsuario);
+        $params = array($cedula, $nombre, $apellido, $correo, $contrasena, $rol, $nombreUsuario);
         $consulta->execute($params);
         $consulta->closeCursor();
     }

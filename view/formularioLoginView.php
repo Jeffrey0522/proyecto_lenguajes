@@ -6,8 +6,8 @@ include_once 'public/header.php';
     <h1>Login</h1>
     <form action="?controlador=Usuario&accion=login" method="post">
         <div>
-            <input type="text" name="nombre_usuario" id="nombre_usuario" placeholder="Nombre de usuario">
-            <input type="password" name="contrasena" id="contrasena" placeholder="******">
+            <input type="text" name="nombre_usuario" id="nombre_usuario" placeholder="Nombre de usuario" required>
+            <input type="password" name="contrasena" id="contrasena" placeholder="******" required>
         </div>
         <div>
             <input type="submit" value="Login">

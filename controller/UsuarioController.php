@@ -16,9 +16,9 @@ class UsuarioController
 
     public function mostrar() {} // listar
 
-    public function formularioSuperAdmin()
+    public function formularioCrearUsuario()
     {
-        $this->view->show("registrarSuperAdminView.php", null);
+        $this->view->show("registrarUsuarioView.php", null);
     }
 
     public function registrarUsuario()
@@ -28,12 +28,13 @@ class UsuarioController
         $apellido = $_POST['apellido'];
         $correo = $_POST['correo'];
         $nombreUsuario = $_POST['nombre_usuario'];
+        $rol = $_POST['rol'];
         $contrasena = $_POST['contrasena'];
         $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        $this->usuario->registrarSuperAdmin($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash);
+        $this->usuario->registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash, $rol);
 
-        $this->formularioSuperAdmin();
+        $this->formularioCrearUsuario();
     }
 
     public function formularioLogin()
@@ -52,7 +53,20 @@ class UsuarioController
             $_SESSION['apellidoUsuario'] = $usuarioLogin['apellido'];
             $_SESSION['username'] = $usuarioLogin['nombre_usuario'];
             $_SESSION['rol'] = $usuarioLogin['rol'];
-            header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+            switch ($usuarioLogin['rol']) {
+                case '1':
+                    header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+                    break;
+                case '2':
+                    header("Location: ?controlador=Usuario&accion=vistaAdminContenido");
+                    break;
+                case '3':
+                    header("Location: ?controlador=Usuario&accion=vistaUsuarioExterno");
+                    break;
+                default:
+                    # code...
+                    break;
+            }
             exit();
         } else {
             header("Location: ?controlador=Usuario&accion=formularioLogin");
@@ -76,18 +90,28 @@ class UsuarioController
     public function vistaSuperAdmin()
     {
         session_start();
-        if (!isset($_SESSION['username'])) {
-            header("Location: ?");
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
+            $this->cerrarSesion();
             exit();
         }
         $this->view->show("superAdminView.php", null);
+    }
+
+    public function vistaUsuarioExterno()
+    {
+        session_start();
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '3') {
+            $this->cerrarSesion();
+            exit();
+        }
+        $this->view->show("usuarioExternoView.php", null);
     }
 
     public function cerrarSesion()
     {
         session_start();
         session_destroy();
-        header("Location: ?");
+        header("Location: ?controlador=Usuario&accion=formularioLogin");
         exit();
     }
 } // fin clase

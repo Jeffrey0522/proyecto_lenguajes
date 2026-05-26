@@ -30,10 +30,17 @@ include_once 'public/header.php';
                 <td><?php echo $usuario['activo']; ?></td>
                 <td>
                     <div>
-                        <form action="?controlador=Usuario&accion=eliminarUsuario" method="POST">
-                            <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
-                            <input type="submit" value="Deshabilitar">
-                        </form>
+                        <?php if ($usuario['activo'] == '1') { ?>
+                            <form action="?controlador=Usuario&accion=eliminarUsuario" method="POST">
+                                <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
+                                <input type="submit" value="Deshabilitar">
+                            </form>
+                        <?php } else { ?>
+                            <form action="?controlador=Usuario&accion=habilitarUsuario" method="POST">
+                                <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
+                                <input type="submit" value="Habilitar">
+                            </form>
+                        <?php } ?>
                         <form action="?controlador=Usuario&accion=formularioActualizar" method="POST">
                             <input type="hidden" name="cedula" value="<?php echo $usuario['cedula'] ?>">
                             <input type="submit" value="Editar">

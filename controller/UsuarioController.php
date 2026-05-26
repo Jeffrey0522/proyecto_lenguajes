@@ -153,4 +153,16 @@ class UsuarioController
         $this->usuario->actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula);
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
+
+    public function habilitarUsuario()
+    {
+        session_start();
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
+            $this->cerrarSesion();
+            exit();
+        }
+        $nombreUsuario = $_POST['nombre_usuario'];
+        $this->usuario->habilitarUsuario($nombreUsuario);
+        header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+    }
 } // fin clase

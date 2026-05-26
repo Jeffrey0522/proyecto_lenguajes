@@ -51,6 +51,13 @@ class UsuarioModel
         $consulta->closeCursor();
     }
 
+    public function habilitarUsuario($nombreUsuario)
+    {
+        $consulta = $this->db->prepare("call sp_habilitar_usuario(?)");
+        $consulta->execute(array($nombreUsuario));
+        $consulta->closeCursor();
+    }
+
     public function buscarUsuario($busqueda)
     {
         $consulta = $this->db->prepare('call sp_buscar_usuario(?)');

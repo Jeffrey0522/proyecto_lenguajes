@@ -13,7 +13,7 @@ class UsuarioModel
 
     public function listar()
     {
-        $consulta = $this->db->prepare('call sp_listar_usuarios()');
+        $consulta = $this->db->prepare('call sp_obtener_usuarios()');
         $consulta->execute();
         $resultado = $consulta->fetchAll();
         $consulta->closeCursor();
@@ -41,6 +41,29 @@ class UsuarioModel
     {
         $consulta = $this->db->prepare("call sp_actualizar_contrasena(?, ?)");
         $consulta->execute(array($nombreUsuario, $contrasenaNueva));
+        $consulta->closeCursor();
+    }
+
+    public function eliminarUsuario($nombreUsuario)
+    {
+        $consulta = $this->db->prepare("call sp_eliminar_usuario(?)");
+        $consulta->execute(array($nombreUsuario));
+        $consulta->closeCursor();
+    }
+
+    public function buscarUsuario($busqueda)
+    {
+        $consulta = $this->db->prepare('call sp_buscar_usuario(?)');
+        $consulta->execute(array($busqueda));
+        $resultado = $consulta->fetch();
+        $consulta->closeCursor();
+        return $resultado;
+    }
+
+    public function actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula)
+    {
+        $consulta = $this->db->prepare("call sp_actualizar_usuario(?, ?, ?, ?, ?, ?)");
+        $consulta->execute(array($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula));
         $consulta->closeCursor();
     }
 

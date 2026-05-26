@@ -60,9 +60,6 @@ class UsuarioController
                 case '2':
                     header("Location: ?controlador=Usuario&accion=vistaAdminContenido");
                     break;
-                case '3':
-                    header("Location: ?controlador=Usuario&accion=vistaUsuarioExterno");
-                    break;
                 default:
                     # code...
                     break;
@@ -94,24 +91,66 @@ class UsuarioController
             $this->cerrarSesion();
             exit();
         }
-        $this->view->show("superAdminView.php", null);
+        $data['usuarios'] = $this->usuario->listar();
+        $this->view->show("superAdminView.php", $data);
     }
 
-    public function vistaUsuarioExterno()
+    public function vistaAdminContenido()
     {
         session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '3') {
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '2') {
             $this->cerrarSesion();
             exit();
         }
-        $this->view->show("usuarioExternoView.php", null);
+        $this->view->show("adminContenidoView.php", null);
     }
 
     public function cerrarSesion()
     {
         session_start();
         session_destroy();
-        header("Location: ?controlador=Usuario&accion=formularioLogin");
+        header("Location: ?");
         exit();
+    }
+
+    public function eliminarUsuario()
+    {
+        session_start();
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
+            $this->cerrarSesion();
+            exit();
+        }
+        $nombreUsuario = $_POST['nombre_usuario'];
+        $this->usuario->eliminarUsuario($nombreUsuario);
+        header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+    }
+
+    public function formularioActualizar()
+    {
+        session_start();
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
+            $this->cerrarSesion();
+            exit();
+        }
+        $cedula = $_POST['cedula'];
+        $usuario = $this->usuario->buscarUsuario($cedula);
+        $this->view->show("actualizarUsuarioView.php", $usuario);
+    }
+
+    public function actualizarUsuario()
+    {
+        session_start();
+        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
+            $this->cerrarSesion();
+            exit();
+        }
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $correo = $_POST['correo'];
+        $nombreUsuario = $_POST['nombre_usuario'];
+        $rol = $_POST['rol'];
+        $cedula = $_POST['cedula'];
+        $this->usuario->actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula);
+        header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
 } // fin clase

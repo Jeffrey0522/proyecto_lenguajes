@@ -74,4 +74,25 @@ class UsuarioModel
         $consulta->closeCursor();
     }
 
+    public function sumarIntento($nombreUsuario)
+    {
+        $consulta = $this->db->prepare("call sp_sumar_intentos(?)");
+        $consulta->execute(array($nombreUsuario));
+        $consulta->closeCursor();
+    }
+
+    public function bloquearUsuario($nombreUsuario, $intentos, $hasta)
+    {
+        $consulta = $this->db->prepare("call sp_bloquear_usuario(?, ?, ?)");
+        $consulta->execute(array($nombreUsuario, $intentos, $hasta));
+        $consulta->closeCursor();
+    }
+
+    public function resetearIntentos($nombreUsuario)
+    {
+        $consulta = $this->db->prepare("call sp_resetear_intentos_fallidos(?)");
+        $consulta->execute(array($nombreUsuario));
+        $consulta->closeCursor();
+    }
+
 } // fin clase

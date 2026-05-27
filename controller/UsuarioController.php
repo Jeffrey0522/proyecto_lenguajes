@@ -39,6 +39,7 @@ class UsuarioController
 
     public function formularioLogin()
     {
+        session_start();
         $this->view->show("formularioLoginView.php", null);
     }
 
@@ -47,28 +48,80 @@ class UsuarioController
         session_start();
         $nombreUsuario = $_POST['nombre_usuario'];
         $contrasena = $_POST['contrasena'];
+
+        $MAX_INTENTOS    = 3;
+        $BLOQUEO_MINUTOS = 1;
+
         $usuarioLogin = $this->usuario->login($nombreUsuario);
-        if ($usuarioLogin != null && password_verify($contrasena, $usuarioLogin['contrasena'])) {
-            $_SESSION['nombreUsuario'] = $usuarioLogin['nombre'];
-            $_SESSION['apellidoUsuario'] = $usuarioLogin['apellido'];
-            $_SESSION['username'] = $usuarioLogin['nombre_usuario'];
-            $_SESSION['rol'] = $usuarioLogin['rol'];
-            switch ($usuarioLogin['rol']) {
-                case '1':
-                    header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
-                    break;
-                case '2':
-                    header("Location: ?controlador=Usuario&accion=vistaAdminContenido");
-                    break;
-                default:
-                    # code...
-                    break;
-            }
-            exit();
-        } else {
+
+        // Usuario no existe
+        if ($usuarioLogin == null) {
+            $_SESSION['login_error'] = "Credenciales inválidas.";
             header("Location: ?controlador=Usuario&accion=formularioLogin");
             exit();
         }
+
+        // ¿Está bloqueado?
+        if ($usuarioLogin['bloqueado_hasta'] !== null) {
+            $ahora = new DateTime();
+            $bloqueado = new DateTime($usuarioLogin['bloqueado_hasta']);
+
+            if ($ahora < $bloqueado) {
+                $diff = $ahora->diff($bloqueado);
+                $_SESSION['login_error'] = "Cuenta bloqueada. Intente en {$diff->i} min {$diff->s} seg.";
+                header("Location: ?controlador=Usuario&accion=formularioLogin");
+                exit();
+            }
+
+            // Bloqueo expirado → resetear
+            $this->usuario->resetearIntentos($nombreUsuario);
+            $usuarioLogin['intentos_fallidos'] = 0;
+            $usuarioLogin['bloqueado_hasta'] = null;
+        }
+
+        // ¿Cuenta activa?
+        if ($usuarioLogin['activo'] == "0") {
+            $_SESSION['login_error'] = "Cuenta desactivada. Contacte al administrador.";
+            header("Location: ?controlador=Usuario&accion=formularioLogin");
+            exit();
+        }
+
+        // Contraseña incorrecta
+        if (!password_verify($contrasena, $usuarioLogin['contrasena'])) {
+            $this->usuario->sumarIntento($nombreUsuario);
+
+            $intentosFallidos = $usuarioLogin['intentos_fallidos'] + 1;
+
+            if ($intentosFallidos >= $MAX_INTENTOS) {
+                $hasta = (new DateTime())->modify("+{$BLOQUEO_MINUTOS} minutes")->format('Y-m-d H:i:s');
+                $this->usuario->bloquearUsuario($nombreUsuario, $intentosFallidos, $hasta);
+                $_SESSION['login_error'] = "Demasiados intentos. Cuenta bloqueada por {$BLOQUEO_MINUTOS} minutos.";
+            } else {
+                $restantes = $MAX_INTENTOS - $intentosFallidos;
+                $_SESSION['login_error'] = "Contraseña incorrecta. Intentos restantes: {$restantes}.";
+            }
+
+            header("Location: ?controlador=Usuario&accion=formularioLogin");
+            exit();
+        }
+
+        // Login exitoso → resetear contadores
+        $this->usuario->resetearIntentos($nombreUsuario);
+
+        $_SESSION['nombreUsuario'] = $usuarioLogin['nombre'];
+        $_SESSION['apellidoUsuario'] = $usuarioLogin['apellido'];
+        $_SESSION['username'] = $usuarioLogin['nombre_usuario'];
+        $_SESSION['rol'] = $usuarioLogin['rol'];
+
+        switch ($usuarioLogin['rol']) {
+            case '1':
+                header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+                break;
+            case '2':
+                header("Location: ?controlador=Usuario&accion=vistaAdminContenido");
+                break;
+        }
+        exit();
     }
 
     public function formularioCambiarContrasena()
@@ -78,8 +131,25 @@ class UsuarioController
 
     public function cambiarContrasena()
     {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            $this->cerrarSesion();
+            exit();
+        }
         $nombreUsuario = $_POST['nombreUsuario'];
+        $contrasena = $_POST['contrasena'];
         $nuevaContrasena = $_POST['nuevaContrasena'];
+        $confirmarContrasena = $_POST['confirmarContrasena'];
+
+        $usuario = $this->usuario->buscarUsuario($nombreUsuario);
+        if (!is_null($usuario)) {
+            if (!password_verify($contrasena, $usuario['contrasena'])) {
+                $_SESSION['cambio_contrasena_error'] = "Credenciales inválidas.";
+                exit();
+            }
+        }
+
+
         $contrasenaHash = password_hash($nuevaContrasena, PASSWORD_BCRYPT);
         $this->usuario->cambiarContrasena($nombreUsuario, $contrasenaHash);
     }

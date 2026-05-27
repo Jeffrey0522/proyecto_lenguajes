@@ -126,6 +126,7 @@ class UsuarioController
 
     public function formularioCambiarContrasena()
     {
+        session_start();
         $this->view->show("cambiarContrasenaView.php", null);
     }
 
@@ -145,13 +146,17 @@ class UsuarioController
         if (!is_null($usuario)) {
             if (!password_verify($contrasena, $usuario['contrasena'])) {
                 $_SESSION['cambio_contrasena_error'] = "Credenciales inválidas.";
-                exit();
+            } else {
+                if ($nuevaContrasena != $confirmarContrasena) {
+                    $_SESSION['cambio_contrasena_error'] = "Las contraseñas no coinciden";
+                } else {
+                    $contrasenaHash = password_hash($nuevaContrasena, PASSWORD_BCRYPT);
+                    $this->usuario->cambiarContrasena($nombreUsuario, $contrasenaHash);
+                }
             }
         }
-
-
-        $contrasenaHash = password_hash($nuevaContrasena, PASSWORD_BCRYPT);
-        $this->usuario->cambiarContrasena($nombreUsuario, $contrasenaHash);
+        $_SESSION['cambio_contrasena_error'] = "Nombre de usuario no existe";
+        exit();
     }
 
     public function vistaSuperAdmin()

@@ -1,5 +1,5 @@
 <?php
-include_once 'public/header.php';
+include_once 'public/headerAdminContenido.php';
 ?>
 
 <h1>Admin contenido</h1>

@@ -18,11 +18,15 @@ class UsuarioController
 
     public function formularioCrearUsuario()
     {
-        $this->view->show("registrarUsuarioView.php", null);
+        $this->protegerRuta('1');
+        $contrasenaGenerada = $this->generarContrasena();
+        $data['contrasenaGenerada'] = $contrasenaGenerada;
+        $this->view->show("registrarUsuarioView.php", $data);
     }
 
     public function registrarUsuario()
     {
+        $this->protegerRuta('1');
         $cedula = $_POST['cedula'];
         $nombre = $_POST['nombre'];
         $apellido = $_POST['apellido'];
@@ -132,11 +136,7 @@ class UsuarioController
 
     public function cambiarContrasena()
     {
-        session_start();
-        if (!isset($_SESSION['username'])) {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta();
         $nombreUsuario = $_POST['nombreUsuario'];
         $contrasena = $_POST['contrasena'];
         $nuevaContrasena = $_POST['nuevaContrasena'];
@@ -161,22 +161,14 @@ class UsuarioController
 
     public function vistaSuperAdmin()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('1');
         $data['usuarios'] = $this->usuario->listar();
         $this->view->show("superAdminView.php", $data);
     }
 
     public function vistaAdminContenido()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '2') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('2');
         $this->view->show("adminContenidoView.php", null);
     }
 
@@ -190,11 +182,7 @@ class UsuarioController
 
     public function eliminarUsuario()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
         $this->usuario->eliminarUsuario($nombreUsuario);
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
@@ -202,11 +190,7 @@ class UsuarioController
 
     public function formularioActualizar()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('1');
         $cedula = $_POST['cedula'];
         $usuario = $this->usuario->buscarUsuario($cedula);
         $this->view->show("actualizarUsuarioView.php", $usuario);
@@ -214,11 +198,7 @@ class UsuarioController
 
     public function actualizarUsuario()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('1');
         $nombre = $_POST['nombre'];
         $apellido = $_POST['apellido'];
         $correo = $_POST['correo'];
@@ -231,13 +211,37 @@ class UsuarioController
 
     public function habilitarUsuario()
     {
-        session_start();
-        if (!isset($_SESSION['username']) || $_SESSION['rol'] != '1') {
-            $this->cerrarSesion();
-            exit();
-        }
+        $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
         $this->usuario->habilitarUsuario($nombreUsuario);
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+    }
+
+    private function generarContrasena()
+    {
+        $mayus = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $minus = 'abcdefghijklmnopqrstuvwxyz';
+        $nums  = '0123456789';
+        $all   = $mayus . $minus . $nums;
+        $pwd   = '';
+        $pwd  .= $mayus[rand(0, strlen($mayus) - 1)];
+        $pwd  .= $nums[rand(0, strlen($nums) - 1)];
+        for ($i = strlen($pwd); $i < 8; $i++) {
+            $pwd .= $all[rand(0, strlen($all) - 1)];
+        }
+        return str_shuffle($pwd);
+    }
+
+    private function protegerRuta($rolRequerido = null)
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            $this->cerrarSesion();
+            exit();
+        }
+        if ($rolRequerido !== null && $_SESSION['rol'] !== $rolRequerido) {
+            $this->cerrarSesion();
+            exit();
+        }
     }
 } // fin clase

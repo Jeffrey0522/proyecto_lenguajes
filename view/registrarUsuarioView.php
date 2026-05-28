@@ -27,8 +27,8 @@ include_once 'public/header.php';
                 <input type="text" name="nombre_usuario" id="nombre_usuario" placeholder="Nombre de Usuario" required>
             </div>
             <div>
-                <label for="contrasena">Digite su contraseña:</label>
-                <input type="password" name="contrasena" id="contrasena" placeholder="******" required>
+                <label for="contrasena">Contraseña temporal:</label>
+                <input type="text" name="contrasena" id="contrasena" value=<?php echo $vars['contrasenaGenerada'] ?> required readonly>
             </div>
             <div>
                 <label for="rol">Selecione el rol del usuario</label>

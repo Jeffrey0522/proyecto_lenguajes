@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
+    <link rel="stylesheet" href="public/css/gabinete.css">
+    <link rel="stylesheet" href="public/css/gaveta.css">
+    <link rel="stylesheet" href="public/css/modal.css">
+    <link rel="stylesheet" href="public/css/caja.css">
 <body>
 
     <div>

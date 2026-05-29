@@ -7,6 +7,27 @@ include_once 'public/headerSuperAdmin.php';
 <a href="?controlador=Usuario&accion=formularioCrearUsuario">Crear usuario</a>
 <a href="?controlador=Usuario&accion=formularioCambiarContrasena">Cambiar contraseña</a>
 
+<?php if (isset($_SESSION['eliminar_usuario'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['eliminar_usuario'];
+        unset($_SESSION['eliminar_usuario']); ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['habilitar_usuario'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['habilitar_usuario'];
+        unset($_SESSION['habilitar_usuario']); ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['actualizar_usuario'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['actualizar_usuario'];
+        unset($_SESSION['actualizar_usuario']); ?>
+    </div>
+<?php endif; ?>
+
 <table>
     <thead>
         <tr>
@@ -32,17 +53,19 @@ include_once 'public/headerSuperAdmin.php';
                 <td><?php echo $usuario['activo']; ?></td>
                 <td>
                     <div>
-                        <?php if ($usuario['activo'] == '1') { ?>
-                            <form action="?controlador=Usuario&accion=eliminarUsuario" method="POST">
-                                <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
-                                <input type="submit" value="Deshabilitar">
-                            </form>
-                        <?php } else { ?>
-                            <form action="?controlador=Usuario&accion=habilitarUsuario" method="POST">
-                                <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
-                                <input type="submit" value="Habilitar">
-                            </form>
-                        <?php } ?>
+                        <?php if ($usuario['nombre_usuario'] != $_SESSION['username']) {
+                            if ($usuario['activo'] == '1') { ?>
+                                <form action="?controlador=Usuario&accion=eliminarUsuario" method="POST">
+                                    <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
+                                    <input type="submit" value="Deshabilitar">
+                                </form>
+                            <?php } else { ?>
+                                <form action="?controlador=Usuario&accion=habilitarUsuario" method="POST">
+                                    <input type="hidden" name="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>">
+                                    <input type="submit" value="Habilitar">
+                                </form>
+                        <?php }
+                        } ?>
                         <form action="?controlador=Usuario&accion=formularioActualizar" method="POST">
                             <input type="hidden" name="cedula" value="<?php echo $usuario['cedula'] ?>">
                             <input type="submit" value="Editar">

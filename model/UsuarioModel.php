@@ -95,4 +95,13 @@ class UsuarioModel
         $consulta->closeCursor();
     }
 
+    public function obtenerSuperusuarios()
+    {
+        $consulta = $this->db->prepare('call sp_obtener_super_admin_activos()');
+        $consulta->execute();
+        $resultado = $consulta->fetchAll();
+        $consulta->closeCursor();
+        return $resultado;
+    }
+
 } // fin clase

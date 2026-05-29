@@ -1,4 +1,10 @@
-<?php include_once "public/header.php" ?>
+<?php
+if ($_SESSION['rol'] == '1'){
+    include_once "public/headerSuperAdmin.php";
+} else {
+    include_once "public/headerAdminContenido.php";
+}
+?>
 
 <?php if (isset($_SESSION['cambiar_contrasena_error'])): ?>
     <div>

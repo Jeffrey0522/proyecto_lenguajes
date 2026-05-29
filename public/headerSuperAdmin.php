@@ -12,6 +12,7 @@
     <div class="layout">
         <aside class="sidebar">
             <h2><?php echo $_SESSION['nombreUsuario'] ?>  <?php echo $_SESSION['apellidoUsuario'] ?></h2>
+            <a href="?controlador=Usuario&accion=vistaSuperAdmin">Inicio</a>
             <a href="?controlador=Usuario&accion=cerrarSesion">Cerrar sesion</a>
         </aside>
         <main class="contenido">

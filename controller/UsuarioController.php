@@ -145,17 +145,30 @@ class UsuarioController
         $usuario = $this->usuario->buscarUsuario($nombreUsuario);
         if (!is_null($usuario)) {
             if (!password_verify($contrasena, $usuario['contrasena'])) {
-                $_SESSION['cambio_contrasena_error'] = "Credenciales inválidas.";
+                $_SESSION['cambiar_contrasena_error'] = "Credenciales inválidas.";
+                header("Location: ?controlador=Usuario&accion=formularioCambiarContrasena");
+                exit();
             } else {
                 if ($nuevaContrasena != $confirmarContrasena) {
-                    $_SESSION['cambio_contrasena_error'] = "Las contraseñas no coinciden";
+                    $_SESSION['cambiar_contrasena_error'] = "Las contraseñas no coinciden";
+                    header("Location: ?controlador=Usuario&accion=formularioCambiarContrasena");
+                    exit();
                 } else {
+                    if (strlen($nuevaContrasena) < 8 || !preg_match('/[A-Z]/', $nuevaContrasena) || !preg_match('/[0-9]/', $nuevaContrasena)) {
+                        $_SESSION['cambiar_contrasena_error'] = "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.";
+                        header("Location: ?controlador=Usuario&accion=formularioCambiarContrasena");
+                        exit();
+                    }
                     $contrasenaHash = password_hash($nuevaContrasena, PASSWORD_BCRYPT);
                     $this->usuario->cambiarContrasena($nombreUsuario, $contrasenaHash);
+                    $_SESSION['cambiar_contrasena_error'] = "Contraseña actualizada correctamente.";
+                    header("Location: ?controlador=Usuario&accion=formularioCambiarContrasena");
+                    exit();
                 }
             }
         }
-        $_SESSION['cambio_contrasena_error'] = "Nombre de usuario no existe";
+        $_SESSION['cambiar_contrasena_error'] = "Nombre de usuario no existe";
+        header("Location: ?controlador=Usuario&accion=formularioCambiarContrasena");
         exit();
     }
 
@@ -185,7 +198,9 @@ class UsuarioController
         $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
         $this->usuario->eliminarUsuario($nombreUsuario);
+        $_SESSION['eliminar_usuario'] = 'Usuario deshabilitado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
+        exit();
     }
 
     public function formularioActualizar()
@@ -206,6 +221,7 @@ class UsuarioController
         $rol = $_POST['rol'];
         $cedula = $_POST['cedula'];
         $this->usuario->actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula);
+        $_SESSION['actualizar_usuario'] = 'Usuario actualizado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
 
@@ -214,6 +230,7 @@ class UsuarioController
         $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
         $this->usuario->habilitarUsuario($nombreUsuario);
+        $_SESSION['habilitar_usuario'] = 'Usuario habilitado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
 

@@ -12,6 +12,7 @@
     <div class="layout">
         <aside class="sidebar">
             <h2>Taxonomía</h2>
+            <a href="index.php?controlador=Usuario&accion=vistaAdminContenido">Inicio</a>
             <a href="index.php?controlador=Orden&accion=mostrar">Orden</a>
             <a href="index.php?controlador=Familia&accion=mostrar">Familia</a>
             <a href="index.php?controlador=SubFamilia&accion=mostrar">Subfamilia</a>

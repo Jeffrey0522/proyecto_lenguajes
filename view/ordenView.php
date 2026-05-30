@@ -68,7 +68,7 @@ include_once 'public/headerAdminContenido.php';
                                     <button type="submit">Actualizar</button>
 
                                     <a href="index.php?controlador=Orden&accion=eliminar&id=<?php echo $orden['id']; ?>"
-                                       onclick="return confirm('¿Seguro que desea eliminar este orden?');">
+                                       onclick="abrirModalEliminar(this.href, '¿Seguro que desea eliminar este orden?'); return false;">
                                         Eliminar
                                     </a>
                                 </td>

@@ -160,7 +160,7 @@ include_once 'public/headerAdminContenido.php';
                                     </button>
 
                                     <a href="index.php?controlador=Familia&accion=eliminar&id=<?php echo $familia['id']; ?>"
-                                       onclick="return confirm('¿Seguro que desea eliminar esta familia?');">
+                                       onclick="abrirModalEliminar(this.href, '¿Seguro que desea eliminar esta familia?'); return false;">
 
                                         Eliminar
 

@@ -210,7 +210,7 @@ include_once 'public/headerAdminContenido.php';
                                     </button>
 
                                     <a href="index.php?controlador=SubFamilia&accion=eliminar&id=<?php echo $subfamilia['id']; ?>"
-                                       onclick="return confirm('¿Seguro que desea eliminar esta subfamilia?');">
+                                       onclick="abrirModalEliminar(this.href, '¿Seguro que desea eliminar esta subfamilia?'); return false;">
 
                                         Eliminar
 

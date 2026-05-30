@@ -1,3 +1,48 @@
+let urlAEliminar = '';
+
+function abrirModalEliminar(url, mensaje) {
+    urlAEliminar = url;
+    let modal = document.getElementById('modalEliminar');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalEliminar';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+        <div class="modal-box">
+            <h2>Confirmar eliminación</h2>
+            <div class="linea"></div>
+            <p id="modalEliminarTexto"></p>
+            <div class="modal-botones">
+                <button type="button" class="btn-cancelar" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" class="btn-peligro" onclick="confirmarEliminar()">Sí, eliminar</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('modalEliminarTexto').innerText = mensaje;
+    modal.style.display = 'flex';
+}
+
+function cerrarModalEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    if (modal) modal.style.display = 'none';
+    urlAEliminar = '';
+}
+
+function confirmarEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    if (modal) {
+        modal.innerHTML = `
+            <div class="modal-box">
+                <div class="spinner"></div>
+                <p>Eliminando...</p>
+            </div>
+        `;
+    }
+    window.location.href = urlAEliminar;
+}
+
 function mostrarModal(mensaje) {
     let modal = document.getElementById("modalMensaje");
 
@@ -33,8 +78,9 @@ function avisarCambio() {
 }
 
 function validarEspecie() {
-    const nombreCientifico = document.querySelector('input[name="nombre_cientifico"]').value.trim();
-    const nombreComun = document.querySelector('input[name="nombre_comun"]').value.trim();
+    const form = document.getElementById('formRegistrarEspecie');
+    const nombreCientifico = form.querySelector('input[name="nombre_cientifico"]').value.trim();
+    const nombreComun = form.querySelector('input[name="nombre_comun"]').value.trim();
 
     if (nombreCientifico === "" && nombreComun === "") {
         mostrarModal("Debe ingresar al menos el nombre común o el nombre científico.");

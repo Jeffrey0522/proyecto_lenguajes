@@ -36,20 +36,20 @@ class UsuarioController
         $contrasena = $_POST['contrasena'];
         $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        $this->usuario->registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash, $rol);
+        $this->usuario->registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash, $rol, $_SESSION['username']);
 
         $this->formularioCrearUsuario();
     }
 
     public function formularioLogin()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         $this->view->show("formularioLoginView.php", null);
     }
 
     public function login()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         $nombreUsuario = $_POST['nombre_usuario'];
         $contrasena = $_POST['contrasena'];
 
@@ -130,7 +130,7 @@ class UsuarioController
 
     public function formularioCambiarContrasena()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         $this->view->show("cambiarContrasenaView.php", null);
     }
 
@@ -187,7 +187,7 @@ class UsuarioController
 
     public function cerrarSesion()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         session_destroy();
         header("Location: ?");
         exit();
@@ -197,7 +197,7 @@ class UsuarioController
     {
         $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
-        $this->usuario->eliminarUsuario($nombreUsuario);
+        $this->usuario->eliminarUsuario($nombreUsuario, $_SESSION['username']);
         $_SESSION['eliminar_usuario'] = 'Usuario deshabilitado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
         exit();
@@ -220,7 +220,7 @@ class UsuarioController
         $nombreUsuario = $_POST['nombre_usuario'];
         $rol = $_POST['rol'];
         $cedula = $_POST['cedula'];
-        $this->usuario->actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula);
+        $this->usuario->actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula, $_SESSION['username']);
         $_SESSION['actualizar_usuario'] = 'Usuario actualizado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
@@ -229,7 +229,7 @@ class UsuarioController
     {
         $this->protegerRuta('1');
         $nombreUsuario = $_POST['nombre_usuario'];
-        $this->usuario->habilitarUsuario($nombreUsuario);
+        $this->usuario->habilitarUsuario($nombreUsuario, $_SESSION['username']);
         $_SESSION['habilitar_usuario'] = 'Usuario habilitado correctamente';
         header("Location: ?controlador=Usuario&accion=vistaSuperAdmin");
     }
@@ -251,7 +251,7 @@ class UsuarioController
 
     private function protegerRuta($rolRequerido = null)
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
         if (!isset($_SESSION['username'])) {
             $this->cerrarSesion();
             exit();

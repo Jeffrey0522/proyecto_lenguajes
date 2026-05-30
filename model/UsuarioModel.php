@@ -20,10 +20,10 @@ class UsuarioModel
         return $resultado;
     } // listar
 
-    public function registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasena, $rol)
+    public function registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasena, $rol, $nombreUsuarioAdmin)
     {
-        $consulta = $this->db->prepare("call sp_registrar_usuario(?, ?, ?, ?, ?, ?, ?)");
-        $params = array($cedula, $nombre, $apellido, $correo, $contrasena, $rol, $nombreUsuario);
+        $consulta = $this->db->prepare("call sp_registrar_usuario(?, ?, ?, ?, ?, ?, ?, ?)");
+        $params = array($cedula, $nombre, $apellido, $correo, $contrasena, $rol, $nombreUsuario, $nombreUsuarioAdmin);
         $consulta->execute($params);
         $consulta->closeCursor();
     }
@@ -44,17 +44,17 @@ class UsuarioModel
         $consulta->closeCursor();
     }
 
-    public function eliminarUsuario($nombreUsuario)
+    public function eliminarUsuario($nombreUsuario, $nombreUsuarioAdmin)
     {
-        $consulta = $this->db->prepare("call sp_eliminar_usuario(?)");
-        $consulta->execute(array($nombreUsuario));
+        $consulta = $this->db->prepare("call sp_eliminar_usuario(?, ?)");
+        $consulta->execute(array($nombreUsuario, $nombreUsuarioAdmin));
         $consulta->closeCursor();
     }
 
-    public function habilitarUsuario($nombreUsuario)
+    public function habilitarUsuario($nombreUsuario, $nombreUsuarioAdmin)
     {
-        $consulta = $this->db->prepare("call sp_habilitar_usuario(?)");
-        $consulta->execute(array($nombreUsuario));
+        $consulta = $this->db->prepare("call sp_habilitar_usuario(?, ?)");
+        $consulta->execute(array($nombreUsuario, $nombreUsuarioAdmin));
         $consulta->closeCursor();
     }
 
@@ -67,10 +67,10 @@ class UsuarioModel
         return $resultado;
     }
 
-    public function actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula)
+    public function actualizarUsuario($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula, $nombreUsuarioAdmin)
     {
-        $consulta = $this->db->prepare("call sp_actualizar_usuario(?, ?, ?, ?, ?, ?)");
-        $consulta->execute(array($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula));
+        $consulta = $this->db->prepare("call sp_actualizar_usuario(?, ?, ?, ?, ?, ?, ?)");
+        $consulta->execute(array($nombre, $apellido, $correo, $nombreUsuario, $rol, $cedula, $nombreUsuarioAdmin));
         $consulta->closeCursor();
     }
 

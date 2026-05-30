@@ -2,22 +2,38 @@
 
 require_once 'model/OrdenModel.php';
 
-class OrdenController {
+class OrdenController
+{
 
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new OrdenModel();
     }
 
-    public function mostrar() {
+    public function mostrar()
+    {
         $ordenes = $this->model->listarOrdenes();
         require_once 'view/ordenView.php';
     }
 
-    public function registrar() {
+    public function registrar()
+    {
         $nombre = $_POST['nombre'];
         $idUsuario = 1;
+        if ($this->model->existeOrden($nombre)) {
+
+            echo "<script>
+        localStorage.setItem(
+            'mensajeSistema',
+            'Ya existe un orden con ese nombre'
+        );
+        window.location='index.php?controlador=Orden&accion=mostrar';
+    </script>";
+
+            return;
+        }
 
         $resultado = $this->model->insertarOrden($nombre, $idUsuario);
 
@@ -34,7 +50,8 @@ class OrdenController {
         }
     }
 
-    public function buscar() {
+    public function buscar()
+    {
         $busqueda = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
 
         if ($busqueda == '') {
@@ -46,7 +63,8 @@ class OrdenController {
         require_once 'view/ordenView.php';
     }
 
-    public function actualizar() {
+    public function actualizar()
+    {
         $id = $_POST['id'];
         $nombre = $_POST['nombre'];
 
@@ -65,7 +83,8 @@ class OrdenController {
         }
     }
 
-    public function eliminar() {
+    public function eliminar()
+    {
         $id = $_GET['id'];
         $resultado = $this->model->eliminarOrden($id);
 
@@ -82,4 +101,3 @@ class OrdenController {
         }
     }
 }
-?>

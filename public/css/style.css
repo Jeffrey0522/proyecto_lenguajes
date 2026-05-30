@@ -1,18 +1,17 @@
-/* ================== Reset básico ================== */
+/* ================ Reset básico ================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ================== Body y Layout ================== */
+/* ================ Body y Layout ================ */
 body,
 html {
     width: 100%;
     height: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #eef1f5;
-    /* Fondo claro original */
+    font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    background: #F0F5FB;
 }
 
 .layout {
@@ -20,177 +19,240 @@ html {
     height: 100vh;
 }
 
-/* ================== Barra de navegación superior ================== */
+/* ================ Barra de navegación superior ================ */
 .top-nav {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: #1E3A5F;
-    /* Ajustado al azul de tu diseño original */
+    background: linear-gradient(90deg, #1A3A6E 0%, #1E4D8C 100%);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 24px;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(26, 58, 110, 0.35);
 }
 
 .top-nav .nav-logo a {
     color: white;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2em;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+.top-nav .nav-logo a:hover {
+    text-decoration: none;
+    background: none;
 }
 
 .top-nav .nav-buttons a.btn-nav {
-    color: #1E3A5F;
-    background-color: white;
+    color: #1A3A6E;
+    background: rgba(255, 255, 255, 0.95);
     text-decoration: none;
-    margin-left: 15px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: 0.3s;
+    margin-left: 10px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.87rem;
+    transition: all 0.2s;
+    border-radius: 6px;
 }
 
 .top-nav .nav-buttons a.btn-nav:hover {
-    background-color: #dbe8f5;
-    transform: translateY(-2px);
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: #1A3A6E;
 }
 
-/* ================== Sidebar (Diseño Original) ================== */
+/* ================ Sidebar ================ */
 .sidebar {
-    width: 260px;
-    background: #1E3A5F;
-    padding: 25px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    width: 240px;
+    background: linear-gradient(180deg, #1A3A6E 0%, #142F5A 100%);
+    padding: 24px 14px;
     height: calc(100vh - 60px);
-    /* Ajuste para la barra superior */
     margin-top: 60px;
-    /* Se empuja hacia abajo por la barra */
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
-.sidebar h2 {
-    color: white;
-    margin-bottom: 25px;
-    font-size: 28px;
-    text-align: center;
+.sidebar h2,
+.sidebar h2.titulo {
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 16px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    font-weight: 600;
+    padding: 0 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: left;
 }
 
 .sidebar a {
     display: block;
-    background: white;
-    color: #1E3A5F;
+    color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
-    padding: 14px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    font-weight: bold;
-    transition: 0.3s;
+    padding: 10px 14px;
+    margin-bottom: 3px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.18s;
+    background: transparent;
 }
 
 .sidebar a:hover {
-    background: #dbe8f5;
-    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.13);
+    color: white;
+    text-decoration: none;
+    transform: none;
 }
 
-/* ================== Contenido Principal ================== */
+/* ================ Contenido Principal ================ */
 .contenido {
     flex: 1;
-    padding: 90px 30px 30px 30px;
-    /* 90px de padding top para no quedar debajo del nav */
-    background: #eef1f5;
+    padding: 80px 32px 32px;
+    background: #F0F5FB;
     overflow-y: auto;
 }
 
 .contenedor {
-    width: 95%;
+    width: 98%;
+    max-width: 1400px;
     margin: auto;
 }
 
+/* ================ Cards ================ */
 .card {
     background: white;
-    padding: 25px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 28px 30px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(26, 58, 110, 0.07), 0 4px 14px rgba(26, 58, 110, 0.06);
     overflow-x: auto;
+    border-top: 3px solid #2E90D8;
 }
 
-/* ================== Textos y Formularios (Original) ================== */
+/* ================ Tipografía ================ */
 h2 {
-    color: #1E3A5F;
-    margin-bottom: 25px;
+    color: #1A3A6E;
+    margin-bottom: 24px;
+    font-size: 1.45rem;
+    font-weight: 700;
 }
 
 h3 {
-    color: #1E3A5F;
-    margin-bottom: 20px;
+    color: #1A3A6E;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    font-weight: 600;
 }
 
 label {
-    font-weight: bold;
-    color: #1E3A5F;
+    font-weight: 600;
+    color: #2B4878;
     display: inline-block;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-size: 0.88rem;
 }
 
+/* ================ Inputs ================ */
 input[type="text"],
 input[type="date"],
 input[type="number"],
 select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 9px 12px;
+    border: 1.5px solid #C5D8EE;
+    border-radius: 7px;
     width: 280px;
     display: block;
     margin-bottom: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1A2E4A;
+    background: #FAFCFF;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #2E90D8;
+    box-shadow: 0 0 0 3px rgba(46, 144, 216, 0.14);
+    background: white;
+}
+
+/* ================ Botones ================ */
 button {
-    background: #1E3A5F;
+    background: linear-gradient(135deg, #1A3A6E, #2568B5);
     color: white;
     border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
+    padding: 10px 20px;
+    border-radius: 7px;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    margin-top: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+    transition: all 0.2s;
+    margin-top: 8px;
 }
 
 button:hover {
-    background: #274b75;
+    background: linear-gradient(135deg, #142F5A, #1E4D8C);
+    box-shadow: 0 4px 14px rgba(26, 58, 110, 0.32);
+    transform: translateY(-1px);
 }
 
-/* ================== Tablas y Enlaces (Original) ================== */
+/* ================ Tablas ================ */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 16px;
     background: white;
     table-layout: auto;
+    font-size: 0.9rem;
 }
 
 table th {
-    background: #1E3A5F;
+    background: #1A3A6E;
     color: white;
-    padding: 14px;
+    padding: 13px 14px;
     word-break: break-word;
     vertical-align: middle;
+    font-weight: 600;
+    font-size: 0.87rem;
+    letter-spacing: 0.3px;
 }
 
 table td {
-    padding: 12px;
-    border: 1px solid #ddd;
+    padding: 10px 12px;
+    border: 1px solid #DDE8F5;
     text-align: center;
     word-break: break-word;
     vertical-align: middle;
     min-width: 140px;
+    color: #253A56;
+}
+
+table tr:nth-child(even) td {
+    background: #F5F9FD;
+}
+
+table tr:hover td {
+    background: #EBF3FB;
+    transition: background 0.15s;
 }
 
 table th:first-child,
@@ -213,24 +275,41 @@ td button {
     margin-bottom: 6px;
 }
 
+/* ================ Enlaces ================ */
 a {
-    color: #d62828;
-    font-weight: bold;
+    color: #1E62AD;
+    font-weight: 600;
     text-decoration: none;
 }
 
 a:hover {
+    color: #1A3A6E;
     text-decoration: underline;
 }
 
-/* ================== Modales ================== */
+/* Delete/action links in tables */
+td a {
+    color: #C0392B;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+td a:hover {
+    color: #96281B;
+    background: none;
+    text-decoration: underline;
+}
+
+/* ================ Modales (PHP modals legados) ================ */
 .modal-fondo {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(10, 25, 55, 0.52);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -239,46 +318,48 @@ a:hover {
 
 .modal-contenido {
     background: white;
-    width: 300px;
+    width: 320px;
     max-width: 90%;
-    padding: 22px;
+    padding: 30px;
     border-radius: 14px;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 12px 36px rgba(26, 58, 110, 0.28);
     animation: aparecerModal 0.25s ease;
+    border-top: 3px solid #2E90D8;
 }
 
 .modal-contenido p {
-    color: #1E3A5F;
-    margin-bottom: 20px;
-    font-size: 17px;
-    font-weight: bold;
+    color: #1A3A6E;
+    margin-bottom: 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.55;
+    background: none;
+    width: auto;
+    padding: 0;
+    border-radius: 0;
+    text-align: center;
 }
 
 .modal-contenido button {
-    background: #1E3A5F;
+    background: linear-gradient(135deg, #1A3A6E, #2568B5);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 10px 26px;
+    border-radius: 7px;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+    font-weight: 600;
+    transition: all 0.2s;
     margin-top: 0;
 }
 
 .modal-contenido button:hover {
-    background: #274b75;
+    background: linear-gradient(135deg, #142F5A, #1E4D8C);
+    box-shadow: 0 4px 14px rgba(26, 58, 110, 0.3);
+    transform: translateY(-1px);
 }
 
 @keyframes aparecerModal {
-    from {
-        transform: scale(0.85);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+    from { transform: scale(0.88); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
 }

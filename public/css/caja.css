@@ -1,91 +1,131 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding: 20px;
+/* ============================================================
+   Estilos para vistas de módulo (Caja) que renderizan
+   formularios y tablas directamente en .contenido, sin .card
+   ============================================================ */
+
+.contenido > h2 {
+    padding-bottom: 14px;
+    border-bottom: 2px solid #DDE8F5;
+    margin-bottom: 24px;
 }
 
-h2{
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-}
-
-form{
-    background-color: white;
+.contenido > form {
+    background: white;
     width: 60%;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    margin: 0 0 24px;
+    padding: 28px 30px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(26, 58, 110, 0.07), 0 4px 14px rgba(26, 58, 110, 0.06);
+    border-top: 3px solid #2E90D8;
 }
 
-label{
+.contenido > form label {
     display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #34495e;
+    font-weight: 600;
+    color: #2B4878;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-size: 0.88rem;
 }
 
-input[type="text"],
-input[type="number"]{
+.contenido > form input[type="text"],
+.contenido > form input[type="number"],
+.contenido > form select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 9px 12px;
+    border: 1.5px solid #C5D8EE;
+    border-radius: 7px;
     box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1A2E4A;
+    background: #FAFCFF;
+    display: block;
+    margin-bottom: 4px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-button{
-    margin-top: 15px;
-    padding: 10px 18px;
+.contenido > form input[type="text"]:focus,
+.contenido > form input[type="number"]:focus,
+.contenido > form select:focus {
+    outline: none;
+    border-color: #2E90D8;
+    box-shadow: 0 0 0 3px rgba(46, 144, 216, 0.14);
+    background: white;
+}
+
+.contenido > form button {
+    background: linear-gradient(135deg, #1A3A6E, #2568B5);
+    color: white;
     border: none;
-    border-radius: 5px;
-    background-color: #3498db;
-    color: white;
+    padding: 10px 22px;
+    border-radius: 7px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 0.88rem;
+    font-family: inherit;
+    margin-top: 16px;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
 }
 
-button:hover{
-    background-color: #2980b9;
+.contenido > form button:hover {
+    background: linear-gradient(135deg, #142F5A, #1E4D8C);
+    box-shadow: 0 4px 14px rgba(26, 58, 110, 0.32);
+    transform: translateY(-1px);
 }
 
-table{
+.contenido > table {
     width: 95%;
-    margin: auto;
+    margin: 16px auto;
     border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+    background: white;
+    box-shadow: 0 1px 3px rgba(26, 58, 110, 0.07), 0 4px 14px rgba(26, 58, 110, 0.06);
+    font-size: 0.9rem;
 }
 
-table thead{
-    background-color: #2c3e50;
+.contenido > table thead {
+    background: #1A3A6E;
+}
+
+.contenido > table th {
     color: white;
-}
-
-table th,
-table td{
-    padding: 12px;
-    border: 1px solid #ddd;
+    font-weight: 600;
+    font-size: 0.87rem;
+    letter-spacing: 0.3px;
+    padding: 13px 14px;
     text-align: center;
+    border: 1px solid #1E4D8C;
 }
 
-table tr:nth-child(even){
-    background-color: #f2f2f2;
+.contenido > table td {
+    padding: 11px 14px;
+    border: 1px solid #DDE8F5;
+    text-align: center;
+    color: #253A56;
 }
 
-a{
+.contenido > table tr:nth-child(even) td {
+    background: #F5F9FD;
+}
+
+.contenido > table tr:hover td {
+    background: #EBF3FB;
+    transition: background 0.15s;
+}
+
+.contenido > table td a {
+    color: #C0392B;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    font-weight: 600;
     text-decoration: none;
-    color: white;
-    background-color: #e74c3c;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-size: 14px;
 }
 
-a:hover{
-    background-color: #c0392b;
+.contenido > table td a:hover {
+    color: #96281B;
+    background: none;
+    text-decoration: underline;
 }

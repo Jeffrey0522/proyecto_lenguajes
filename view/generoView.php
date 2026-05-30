@@ -143,7 +143,7 @@ include_once 'public/headerAdminContenido.php';
                                     </button>
 
                                     <a href="index.php?controlador=Genero&accion=eliminar&id=<?php echo $genero['id']; ?>"
-                                       onclick="return confirm('¿Seguro que desea eliminar este género?');">
+                                       onclick="abrirModalEliminar(this.href, '¿Seguro que desea eliminar este género?'); return false;">
                                         Eliminar
                                     </a>
                                 </td>

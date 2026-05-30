@@ -26,17 +26,17 @@ class EspecieController {
 
     public function registrar() {
 
-        $nombreCientifico = $_POST['nombre_cientifico'];
+        $nombreCientifico = trim($_POST['nombre_cientifico']) !== '' ? trim($_POST['nombre_cientifico']) : null;
 
-        $nombreComun = $_POST['nombre_comun'];
+        $nombreComun = trim($_POST['nombre_comun']) !== '' ? trim($_POST['nombre_comun']) : null;
 
-        $descripcion = $_POST['descripcion'];
+        $descripcion = trim($_POST['descripcion']) !== '' ? trim($_POST['descripcion']) : null;
 
         $idGenero = $_POST['id_genero'];
 
         $idUsuario = 1;
 
-        if (trim($nombreCientifico) == '' && trim($nombreComun) == '') {
+        if ($nombreCientifico === null && $nombreComun === null) {
 
             echo "<script>
                     localStorage.setItem('mensajeSistema','Debe ingresar al menos el nombre común o el nombre científico');
@@ -46,18 +46,26 @@ class EspecieController {
             return;
         }
 
-        $this->model->insertarEspecie(
-            $nombreCientifico,
-            $nombreComun,
-            $descripcion,
-            $idGenero,
-            $idUsuario
-        );
+        try {
+            $this->model->insertarEspecie(
+                $nombreCientifico,
+                $nombreComun,
+                $descripcion,
+                $idGenero,
+                $idUsuario
+            );
 
-        echo "<script>
-                localStorage.setItem('mensajeSistema','Especie registrada correctamente');
-                window.location='index.php?controlador=Especie&accion=mostrar';
-              </script>";
+            echo "<script>
+                    localStorage.setItem('mensajeSistema','Especie registrada correctamente');
+                    window.location='index.php?controlador=Especie&accion=mostrar';
+                  </script>";
+
+        } catch (Exception $e) {
+            echo "<script>
+                    localStorage.setItem('mensajeSistema','Error al registrar especie: " . addslashes($e->getMessage()) . "');
+                    window.location='index.php?controlador=Especie&accion=mostrar';
+                  </script>";
+        }
     }
 
     public function buscar() {

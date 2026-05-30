@@ -2,15 +2,18 @@
 
 require_once 'libs/SPDO.php';
 
-class OrdenModel {
+class OrdenModel
+{
 
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = SPDO::singleton();
     }
 
-    public function listarOrdenes() {
+    public function listarOrdenes()
+    {
         $consulta = $this->db->prepare("CALL sp_listar_ordenes()");
         $consulta->execute();
         $datos = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -18,7 +21,8 @@ class OrdenModel {
         return $datos;
     }
 
-    public function insertarOrden($nombre, $idUsuario) {
+    public function insertarOrden($nombre, $idUsuario)
+    {
         $consulta = $this->db->prepare("CALL sp_insertar_orden(?, ?)");
         $consulta->bindParam(1, $nombre);
         $consulta->bindParam(2, $idUsuario);
@@ -27,7 +31,8 @@ class OrdenModel {
         return $resultado;
     }
 
-    public function buscarOrden($busqueda) {
+    public function buscarOrden($busqueda)
+    {
         $consulta = $this->db->prepare("CALL sp_buscar_orden(?)");
         $consulta->bindParam(1, $busqueda);
         $consulta->execute();
@@ -36,7 +41,8 @@ class OrdenModel {
         return $datos;
     }
 
-    public function actualizarOrden($id, $nombre) {
+    public function actualizarOrden($id, $nombre)
+    {
         $consulta = $this->db->prepare("CALL sp_actualizar_orden(?, ?)");
         $consulta->bindParam(1, $id);
         $consulta->bindParam(2, $nombre);
@@ -45,7 +51,8 @@ class OrdenModel {
         return $resultado;
     }
 
-    public function eliminarOrden($id) {
+    public function eliminarOrden($id)
+    {
         $validacion = $this->db->prepare("
             SELECT COUNT(*) AS total
             FROM familias
@@ -66,5 +73,20 @@ class OrdenModel {
         $consulta->closeCursor();
         return $resultado;
     }
+    public function existeOrden($nombre)
+    {
+        $consulta = $this->db->prepare(
+            "CALL sp_existe_orden(?)"
+        );
+
+        $consulta->bindParam(1, $nombre);
+
+        $consulta->execute();
+
+        $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        $consulta->closeCursor();
+
+        return $resultado['total'] > 0;
+    }
 }
-?>

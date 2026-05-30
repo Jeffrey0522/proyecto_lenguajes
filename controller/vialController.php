@@ -86,19 +86,21 @@ class vialController
     {
         $vial = new vialModel();
         $caja = new cajaModel();
-
         $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : null;
 
         if ($codigo != null) {
-            $vial->eliminar($codigo);
-            $data['mensaje'] = "Vial eliminado correctamente.";
+            try {
+                $vial->eliminar($codigo);
+                $data['mensaje'] = "Vial eliminado correctamente.";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: " . $e->getMessage();
+            }
         } else {
             $data['mensaje'] = "No se recibió el código del vial.";
         }
 
         $data['viales'] = $vial->listar();
         $data['cajas'] = $caja->listar();
-
         $this->view->show("vialView.php", $data);
     }
 }

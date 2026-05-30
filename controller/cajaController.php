@@ -74,12 +74,15 @@ class cajaController
     public function eliminar()
     {
         $caja = new cajaModel();
-
         $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : null;
 
         if ($codigo != null) {
-            $caja->eliminar($codigo);
-            $data['mensaje'] = "Caja eliminada correctamente.";
+            try {
+                $caja->eliminar($codigo);
+                $data['mensaje'] = "Caja eliminada correctamente.";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: " . $e->getMessage();
+            }
         } else {
             $data['mensaje'] = "No se recibió el código de la caja.";
         }

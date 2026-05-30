@@ -1,4 +1,4 @@
-<?php if ($mensaje != null) { ?>
+<?php if (isset($mensaje) && $mensaje != null) { ?>
 
 <div id="modalMensaje" class="modal">
 

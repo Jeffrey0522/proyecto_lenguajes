@@ -53,3 +53,128 @@ window.addEventListener('load', function () {
         localStorage.removeItem('mensajeSistema');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ordenSelect = document.getElementById('orden');
+    const familiaSelect = document.getElementById('familia');
+    const subfamiliaSelect = document.getElementById('subfamilia');
+    const generoSelect = document.getElementById('genero');
+    const especieSelect = document.getElementById('especie');
+
+    const familiasPorOrden = JSON.parse(ordenSelect.getAttribute('data-familias'));
+    const subfamiliasPorFamilia = JSON.parse(ordenSelect.getAttribute('data-subfamilias'));
+    const generosPorSubfamilia = JSON.parse(ordenSelect.getAttribute('data-generos'));
+    const especiesPorGenero = JSON.parse(ordenSelect.getAttribute('data-especies'));
+
+    function actualizarCombo(combo, opciones) {
+        combo.innerHTML = '<option value="">Seleccione una opción</option>';
+        opciones.forEach(op => {
+            const option = document.createElement('option');
+            option.value = op.id;
+            option.textContent = op.nombre;
+            combo.appendChild(option);
+        });
+        combo.disabled = (combo.options.length <= 1);
+    }
+
+    ordenSelect.addEventListener('change', function() {
+        const ordenId = this.value;
+        const familias = familiasPorOrden[ordenId] || [];
+        actualizarCombo(familiaSelect, familias);
+
+        // Limpiar combos dependientes
+        actualizarCombo(subfamiliaSelect, []);
+        actualizarCombo(generoSelect, []);
+        actualizarCombo(especieSelect, []);
+    });
+
+    familiaSelect.addEventListener('change', function() {
+        const familiaId = this.value;
+        const subfamilias = subfamiliasPorFamilia[familiaId] || [];
+        actualizarCombo(subfamiliaSelect, subfamilias);
+
+        actualizarCombo(generoSelect, []);
+        actualizarCombo(especieSelect, []);
+    });
+
+    subfamiliaSelect.addEventListener('change', function() {
+        const subfamId = this.value;
+        const generos = generosPorSubfamilia[subfamId] || [];
+        actualizarCombo(generoSelect, generos);
+
+        actualizarCombo(especieSelect, []);
+    });
+
+    generoSelect.addEventListener('change', function() {
+        const generoId = this.value;
+        const especies = especiesPorGenero[generoId] || [];
+        actualizarCombo(especieSelect, especies);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const ordenSelect = document.getElementById('orden');
+    const familiaSelect = document.getElementById('familia');
+    const subfamiliaSelect = document.getElementById('subfamilia');
+    const generoSelect = document.getElementById('genero');
+    const especieSelect = document.getElementById('especie');
+
+    function limpiarSelect(combo) {
+        combo.innerHTML = '<option value="">Seleccione una opción</option>';
+    }
+
+    function llenarSelect(combo, datos) {
+        limpiarSelect(combo);
+        datos.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = item.nombre;
+            combo.appendChild(option);
+        });
+        combo.disabled = (datos.length === 0);
+    }
+
+    ordenSelect.addEventListener('change', function() {
+        const id = this.value;
+        limpiarSelect(familiaSelect);
+        limpiarSelect(subfamiliaSelect);
+        limpiarSelect(generoSelect);
+        limpiarSelect(especieSelect);
+
+        fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerFamiliasPorOrden&id_orden=${id}`)
+            .then(res => res.json())
+            .then(data => llenarSelect(familiaSelect, data));
+    });
+
+    familiaSelect.addEventListener('change', function() {
+        const id = this.value;
+        limpiarSelect(subfamiliaSelect);
+        limpiarSelect(generoSelect);
+        limpiarSelect(especieSelect);
+
+        fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerSubfamiliasPorFamilia&id_familia=${id}`)
+            .then(res => res.json())
+            .then(data => llenarSelect(subfamiliaSelect, data));
+    });
+
+    subfamiliaSelect.addEventListener('change', function() {
+        const id = this.value;
+        limpiarSelect(generoSelect);
+        limpiarSelect(especieSelect);
+
+        fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerGenerosPorSubfamilia&id_sub_familia=${id}`)
+            .then(res => res.json())
+            .then(data => llenarSelect(generoSelect, data));
+    });
+
+    generoSelect.addEventListener('change', function() {
+        const id = this.value;
+        limpiarSelect(especieSelect);
+
+        fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerEspeciesPorGenero&id_genero=${id}`)
+            .then(res => res.json())
+            .then(data => llenarSelect(especieSelect, data));
+    });
+
+});

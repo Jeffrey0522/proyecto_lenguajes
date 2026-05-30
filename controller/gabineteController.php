@@ -66,12 +66,15 @@ class gabineteController
     public function eliminar()
     {
         $gabinete = new gabineteModel();
-
         $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : null;
 
         if ($codigo != null) {
-            $gabinete->eliminar($codigo);
-            $data['mensaje'] = "Gabinete eliminado correctamente.";
+            try {
+                $gabinete->eliminar($codigo);
+                $data['mensaje'] = "Gabinete eliminado correctamente.";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: " . $e->getMessage();
+            }
         } else {
             $data['mensaje'] = "No se recibió el código del gabinete.";
         }

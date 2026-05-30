@@ -57,9 +57,12 @@ class cajaModel
     public function eliminar($codigo)
     {
         $consulta = $this->db->prepare("CALL sp_eliminar_caja(?)");
-        $resultado = $consulta->execute(array($codigo));
+        if (!$consulta->execute(array($codigo))) {
+            $error = $consulta->errorInfo();
+            throw new Exception($error[2]);
+        }
         $consulta->closeCursor();
-        return $resultado;
+        return true;
     }
 
     public function tieneCapacidadDisponible($codigoCaja)

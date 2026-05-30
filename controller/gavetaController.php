@@ -82,19 +82,21 @@ class gavetaController
     {
         $gaveta = new gavetaModel();
         $gabinete = new gabineteModel();
-
         $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : null;
 
         if ($codigo != null) {
-            $gaveta->eliminar($codigo);
-            $data['mensaje'] = "Gaveta fue eliminada correctamente.";
+            try {
+                $gaveta->eliminar($codigo);
+                $data['mensaje'] = "Gaveta eliminada correctamente.";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: " . $e->getMessage();
+            }
         } else {
             $data['mensaje'] = "No se recibió el código de la gaveta.";
         }
 
         $data['gavetas'] = $gaveta->listar();
         $data['gabinetes'] = $gabinete->listar();
-
         $this->view->show("gavetaView.php", $data);
     }
 }

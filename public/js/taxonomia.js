@@ -54,7 +54,7 @@ window.addEventListener('load', function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const ordenSelect = document.getElementById('orden');
     const familiaSelect = document.getElementById('familia');
     const subfamiliaSelect = document.getElementById('subfamilia');
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         combo.disabled = (combo.options.length <= 1);
     }
 
-    ordenSelect.addEventListener('change', function() {
+    ordenSelect.addEventListener('change', function () {
         const ordenId = this.value;
         const familias = familiasPorOrden[ordenId] || [];
         actualizarCombo(familiaSelect, familias);
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         actualizarCombo(especieSelect, []);
     });
 
-    familiaSelect.addEventListener('change', function() {
+    familiaSelect.addEventListener('change', function () {
         const familiaId = this.value;
         const subfamilias = subfamiliasPorFamilia[familiaId] || [];
         actualizarCombo(subfamiliaSelect, subfamilias);
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         actualizarCombo(especieSelect, []);
     });
 
-    subfamiliaSelect.addEventListener('change', function() {
+    subfamiliaSelect.addEventListener('change', function () {
         const subfamId = this.value;
         const generos = generosPorSubfamilia[subfamId] || [];
         actualizarCombo(generoSelect, generos);
@@ -105,14 +105,14 @@ document.addEventListener('DOMContentLoaded', function() {
         actualizarCombo(especieSelect, []);
     });
 
-    generoSelect.addEventListener('change', function() {
+    generoSelect.addEventListener('change', function () {
         const generoId = this.value;
         const especies = especiesPorGenero[generoId] || [];
         actualizarCombo(especieSelect, especies);
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const ordenSelect = document.getElementById('orden');
     const familiaSelect = document.getElementById('familia');
@@ -124,18 +124,40 @@ document.addEventListener('DOMContentLoaded', function() {
         combo.innerHTML = '<option value="">Seleccione una opción</option>';
     }
 
-    function llenarSelect(combo, datos) {
-        limpiarSelect(combo);
+    function llenarSelect(combo, datos, textoInicial) {
+        combo.innerHTML = '<option value="">' + textoInicial + '</option>';
+
+        if (!combo.querySelector('option[value="SP"]')) {
+            const opcionSP = document.createElement('option');
+            opcionSP.value = 'SP';
+            opcionSP.textContent = 'SP';
+            combo.appendChild(opcionSP);
+        }
+
         datos.forEach(item => {
             const option = document.createElement('option');
             option.value = item.id;
-            option.textContent = item.nombre;
+
+            const nombreCientifico = item.nombre_cientifico || item.nombreCientifico || '';
+            const nombreComun = item.nombre_comun || item.nombreComun || '';
+
+            if (nombreComun.trim() !== '') {
+                option.textContent = nombreComun;
+            } else if (nombreCientifico.trim() !== '') {
+                option.textContent = nombreCientifico;
+            } else if (item.nombre) {
+                option.textContent = item.nombre;
+            } else {
+                option.textContent = "ID: " + item.id;
+            }
+
             combo.appendChild(option);
         });
-        combo.disabled = (datos.length === 0);
+
+        combo.disabled = false;
     }
 
-    ordenSelect.addEventListener('change', function() {
+    ordenSelect.addEventListener('change', function () {
         const id = this.value;
         limpiarSelect(familiaSelect);
         limpiarSelect(subfamiliaSelect);
@@ -144,10 +166,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerFamiliasPorOrden&id_orden=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(familiaSelect, data));
+            .then(data => llenarSelect(familiaSelect, data, 'Seleccione una familia'));
     });
 
-    familiaSelect.addEventListener('change', function() {
+    familiaSelect.addEventListener('change', function () {
         const id = this.value;
         limpiarSelect(subfamiliaSelect);
         limpiarSelect(generoSelect);
@@ -155,26 +177,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerSubfamiliasPorFamilia&id_familia=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(subfamiliaSelect, data));
+            .then(data => llenarSelect(subfamiliaSelect, d, 'Seleccione una subfamilia')
     });
 
-    subfamiliaSelect.addEventListener('change', function() {
+    subfamiliaSelect.addEventListener('change', function () {
         const id = this.value;
         limpiarSelect(generoSelect);
         limpiarSelect(especieSelect);
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerGenerosPorSubfamilia&id_sub_familia=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(generoSelect, data));
+            .then(data => llenarSelect(generoSelect, d, 'Seleccione un género')
     });
 
-    generoSelect.addEventListener('change', function() {
+    generoSelect.addEventListener('change', function () {
         const id = this.value;
         limpiarSelect(especieSelect);
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerEspeciesPorGenero&id_genero=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(especieSelect, data));
+            .then(data => llenarSelect(especieSelect, d, 'Seleccione una especie')
     });
 
 });

@@ -21,7 +21,7 @@
             </select>
 
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Familia:</label>
-            <select id="mod_familia" name="id_familia" style="width: 100%; margin-bottom: 10px;" disabled required>
+            <select id="mod_familia" name="id_familia" style="width: 100%; margin-bottom: 10px;" disabled>
                 <option value="">Seleccione una familia</option>
             </select>
 
@@ -31,12 +31,12 @@
             </select>
 
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Género:</label>
-            <select id="mod_genero" name="id_genero" style="width: 100%; margin-bottom: 10px;" disabled required>
+            <select id="mod_genero" name="id_genero" style="width: 100%; margin-bottom: 10px;" disabled>
                 <option value="">Seleccione un género</option>
             </select>
 
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Especie:</label>
-            <select id="mod_especie" name="id_especie" style="width: 100%; margin-bottom: 20px;" disabled required>
+            <select id="mod_especie" name="id_especie" style="width: 100%; margin-bottom: 20px;" disabled>
                 <option value="">Seleccione una especie</option>
             </select>
 

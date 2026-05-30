@@ -75,7 +75,12 @@ class RegistroEspecimenModel
 
     public function obtenerEspeciesPorGenero($idGenero)
     {
-        $consulta = $this->db->prepare("CALL sp_obtener_especies_por_genero(?)");
+        $consulta = $this->db->prepare("
+            SELECT id, nombre_cientifico, nombre_comun
+            FROM especies
+            WHERE id_genero = ?
+            ORDER BY nombre_cientifico, nombre_comun
+        ");
         $consulta->bindParam(1, $idGenero);
         $consulta->execute();
         $datos = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -88,11 +93,15 @@ class RegistroEspecimenModel
     public function registrarEspecimen($datos)
     {
         $consulta = $this->db->prepare(
-            "CALL sp_registrar_especimen(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            "CALL sp_registrar_especimen(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
 
         $exito = $consulta->execute([
             $datos['codigo_especimen'],
+            $datos['id_orden'],
+            $datos['id_familia'],
+            $datos['id_subfamilia'],
+            $datos['id_genero'],
             $datos['id_especie'],
             $datos['codigo_gaveta'],
             $datos['codigo_vial'],
@@ -200,10 +209,10 @@ class RegistroEspecimenModel
         return $datos;
     }
 
-    public function actualizarTaxonomia($codigo, $id_especie)
+    public function actualizarTaxonomia($codigo, $id_orden, $id_familia, $id_subfamilia, $id_genero, $id_especie)
     {
-        $consulta = $this->db->prepare("CALL sp_actualizar_taxonomia_especimen(?, ?)");
-        if (!$consulta->execute([$codigo, $id_especie])) {
+        $consulta = $this->db->prepare("CALL sp_actualizar_taxonomia_especimen(?, ?, ?, ?, ?, ?)");
+        if (!$consulta->execute([$codigo, $id_orden, $id_familia, $id_subfamilia, $id_genero, $id_especie])) {
             $errorInfo = $consulta->errorInfo();
             throw new Exception("BD: " . $errorInfo[2]);
         }

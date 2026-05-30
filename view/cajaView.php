@@ -1,4 +1,4 @@
-<?php include_once 'public/header.php'; ?>
+<?php include_once 'public/headerAdminContenido.php'; ?>
 
 <?php
 $cajas = isset($cajas) ? $cajas : array();

@@ -19,29 +19,14 @@
     <!-- ================== Barra de navegación superior ================== -->
     <header>
         <nav class="top-nav">
-            <div class="nav-logo">
-                <a href="index.php">Laboratorio Entomología</a>
-            </div>
-            <!-- Botones al lado derecho -->
-            <div class="nav-buttons nav-right">
-                <a href="index.php?controlador=Gabinete&accion=mostrar" class="btn-nav">Gabinete</a>
-                <a href="index.php?controlador=Gaveta&accion=mostrar" class="btn-nav">Gaveta</a>
-                <a href="index.php?controlador=Caja&accion=mostrar" class="btn-nav">Caja</a>
-                <a href="index.php?controlador=Vial&accion=mostrar" class="btn-nav">Vial</a>
-            </div>
+            
         </nav>
     </header>
 
     <!-- ================== Layout principal ================== -->
     <div class="layout">
         <aside class="sidebar">
-            <h2 class="titulo">Taxonomía</h2>
-            <a href="index.php?controlador=Orden&accion=mostrar">Orden</a>
-            <a href="index.php?controlador=Familia&accion=mostrar">Familia</a>
-            <a href="index.php?controlador=SubFamilia&accion=mostrar">Subfamilia</a>
-            <a href="index.php?controlador=Genero&accion=mostrar">Género</a>
-            <a href="index.php?controlador=Especie&accion=mostrar">Especie</a>
-            <a href="index.php?controlador=RegistroEspecimen&accion=mostrar">Registro Especimen</a>
+            
         </aside>
 
         <main class="contenido">

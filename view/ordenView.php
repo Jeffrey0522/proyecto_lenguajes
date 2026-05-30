@@ -1,4 +1,6 @@
-<?php include_once 'public/header.php'; ?>
+<?php
+include_once 'public/headerAdminContenido.php';
+?>
 
 <div class="contenedor">
     <h2>Gestión de Orden Taxonómico</h2>

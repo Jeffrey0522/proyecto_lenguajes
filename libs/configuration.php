@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Costa_Rica');
 require 'libs/Config.php';
 $config = Config::singleton();
 $config->set('controllerFolder', 'controller/');

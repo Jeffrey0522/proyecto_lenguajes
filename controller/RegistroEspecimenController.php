@@ -23,7 +23,7 @@ class RegistroEspecimenController
         $viales = $this->model->listarViales();
         $especimenes = $this->model->listarEspecimenes();
 
-        require_once 'view/registroEspecimenView.php';
+        require_once __DIR__ . '/../view/registroEspecimenView.php';
     }
 
     public function obtenerFamiliasPorOrden()

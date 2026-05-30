@@ -20,7 +20,7 @@
     <header>
         <nav class="top-nav">
             <div class="nav-logo">
-                <a href="index.php">Laboratorio Entomología</a>
+                <a href="?controlador=Usuario&accion=vistaAdminContenido">Laboratorio Entomología</a>
             </div>
             <!-- Botones al lado derecho -->
             <div class="nav-buttons nav-right">
@@ -36,12 +36,14 @@
     <div class="layout">
         <aside class="sidebar">
             <h2 class="titulo">Taxonomía</h2>
+            <a href="?controlador=Usuario&accion=vistaAdminContenido">Inicio</a>
             <a href="index.php?controlador=Orden&accion=mostrar">Orden</a>
             <a href="index.php?controlador=Familia&accion=mostrar">Familia</a>
             <a href="index.php?controlador=SubFamilia&accion=mostrar">Subfamilia</a>
             <a href="index.php?controlador=Genero&accion=mostrar">Género</a>
             <a href="index.php?controlador=Especie&accion=mostrar">Especie</a>
             <a href="index.php?controlador=RegistroEspecimen&accion=mostrar">Registro Especimen</a>
+            <a href="?controlador=Usuario&accion=cerrarSesion">Cerrar sesion</a>
         </aside>
 
         <main class="contenido">

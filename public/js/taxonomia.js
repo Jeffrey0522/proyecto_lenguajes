@@ -1,13 +1,58 @@
+let urlAEliminar = '';
+
+function abrirModalEliminar(url, mensaje) {
+    urlAEliminar = url;
+    let modal = document.getElementById('modalEliminar');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalEliminar';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+        <div class="modal-box">
+            <h2>Confirmar eliminación</h2>
+            <div class="linea"></div>
+            <p id="modalEliminarTexto"></p>
+            <div class="modal-botones">
+                <button type="button" class="btn-cancelar" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" class="btn-peligro" onclick="confirmarEliminar()">Sí, eliminar</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('modalEliminarTexto').innerText = mensaje;
+    modal.style.display = 'flex';
+}
+
+function cerrarModalEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    if (modal) modal.style.display = 'none';
+    urlAEliminar = '';
+}
+
+function confirmarEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    if (modal) {
+        modal.innerHTML = `
+            <div class="modal-box">
+                <div class="spinner"></div>
+                <p>Eliminando...</p>
+            </div>
+        `;
+    }
+    window.location.href = urlAEliminar;
+}
+
 function mostrarModal(mensaje) {
     let modal = document.getElementById("modalMensaje");
 
     if (!modal) {
         modal = document.createElement("div");
         modal.id = "modalMensaje";
-        modal.className = "modal-fondo";
+        modal.className = "modal";
 
         modal.innerHTML = `
-    <div class="modal-contenido">
+    <div class="modal-box">
         <p id="modalTexto"></p>
         <button type="button" onclick="cerrarModal()">Aceptar</button>
     </div>
@@ -31,9 +76,11 @@ function cerrarModal() {
 function avisarCambio() {
     mostrarModal("Recuerde presionar el botón Actualizar para guardar los cambios.");
 }
+
 function validarEspecie() {
-    const nombreCientifico = document.querySelector('input[name="nombre_cientifico"]').value.trim();
-    const nombreComun = document.querySelector('input[name="nombre_comun"]').value.trim();
+    const form = document.getElementById('formRegistrarEspecie');
+    const nombreCientifico = form.querySelector('input[name="nombre_cientifico"]').value.trim();
+    const nombreComun = form.querySelector('input[name="nombre_comun"]').value.trim();
 
     if (nombreCientifico === "" && nombreComun === "") {
         mostrarModal("Debe ingresar al menos el nombre común o el nombre científico.");
@@ -42,6 +89,7 @@ function validarEspecie() {
 
     return true;
 }
+
 window.addEventListener('load', function () {
 
     const mensaje = localStorage.getItem('mensajeSistema');
@@ -56,6 +104,9 @@ window.addEventListener('load', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     const ordenSelect = document.getElementById('orden');
+
+    if (!ordenSelect) return;
+
     const familiaSelect = document.getElementById('familia');
     const subfamiliaSelect = document.getElementById('subfamilia');
     const generoSelect = document.getElementById('genero');
@@ -82,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const familias = familiasPorOrden[ordenId] || [];
         actualizarCombo(familiaSelect, familias);
 
-        // Limpiar combos dependientes
         actualizarCombo(subfamiliaSelect, []);
         actualizarCombo(generoSelect, []);
         actualizarCombo(especieSelect, []);
@@ -115,6 +165,9 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
 
     const ordenSelect = document.getElementById('orden');
+
+    if (!ordenSelect) return;
+
     const familiaSelect = document.getElementById('familia');
     const subfamiliaSelect = document.getElementById('subfamilia');
     const generoSelect = document.getElementById('genero');
@@ -177,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerSubfamiliasPorFamilia&id_familia=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(subfamiliaSelect, d, 'Seleccione una subfamilia')
+            .then(data => llenarSelect(subfamiliaSelect, data, 'Seleccione una subfamilia'));
     });
 
     subfamiliaSelect.addEventListener('change', function () {
@@ -187,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerGenerosPorSubfamilia&id_sub_familia=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(generoSelect, d, 'Seleccione un género')
+            .then(data => llenarSelect(generoSelect, data, 'Seleccione un género'));
     });
 
     generoSelect.addEventListener('change', function () {
@@ -196,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(`index.php?controlador=RegistroEspecimen&accion=obtenerEspeciesPorGenero&id_genero=${id}`)
             .then(res => res.json())
-            .then(data => llenarSelect(especieSelect, d, 'Seleccione una especie')
+            .then(data => llenarSelect(especieSelect, data, 'Seleccione una especie'));
     });
-
 });

@@ -21,6 +21,7 @@ class SPDO extends PDO{
        $config= Config::singleton();
        parent::__construct('mysql:host='.$config->get('dbhost').';dbname='.$config->get('dbname'),
                $config->get('dbuser'), $config->get('dbpass'));
+       $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } // constructor
     
     public static function singleton(){

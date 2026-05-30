@@ -13,7 +13,8 @@ include_once 'public/headerAdminContenido.php';
 
         <h3>Registrar nueva especie</h3>
 
-        <form action="index.php?controlador=Especie&accion=registrar"
+        <form id="formRegistrarEspecie"
+              action="index.php?controlador=Especie&accion=registrar"
               method="POST"
               onsubmit="return validarEspecie();">
 
@@ -197,7 +198,7 @@ include_once 'public/headerAdminContenido.php';
                                     </button>
 
                                     <a href="index.php?controlador=Especie&accion=eliminar&id=<?php echo $especie['id']; ?>"
-                                       onclick="return confirm('¿Seguro que desea eliminar esta especie?');">
+                                       onclick="abrirModalEliminar(this.href, '¿Seguro que desea eliminar esta especie?'); return false;">
 
                                         Eliminar
 

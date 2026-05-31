@@ -53,18 +53,32 @@ class OrdenModel
 
     public function eliminarOrden($id)
     {
-        $validacion = $this->db->prepare("
+        $validacionFamilias = $this->db->prepare("
             SELECT COUNT(*) AS total
             FROM familias
             WHERE id_orden = ?
         ");
-        $validacion->bindParam(1, $id);
-        $validacion->execute();
-        $resultado = $validacion->fetch(PDO::FETCH_ASSOC);
-        $validacion->closeCursor();
+        $validacionFamilias->bindParam(1, $id);
+        $validacionFamilias->execute();
+        $resultadoFamilias = $validacionFamilias->fetch(PDO::FETCH_ASSOC);
+        $validacionFamilias->closeCursor();
 
-        if ($resultado['total'] > 0) {
-            return false;
+        if ($resultadoFamilias['total'] > 0) {
+            return 'familias';
+        }
+
+        $validacionSubfamilias = $this->db->prepare("
+            SELECT COUNT(*) AS total
+            FROM sub_familias
+            WHERE id_orden = ?
+        ");
+        $validacionSubfamilias->bindParam(1, $id);
+        $validacionSubfamilias->execute();
+        $resultadoSubfamilias = $validacionSubfamilias->fetch(PDO::FETCH_ASSOC);
+        $validacionSubfamilias->closeCursor();
+
+        if ($resultadoSubfamilias['total'] > 0) {
+            return 'subfamilias';
         }
 
         $consulta = $this->db->prepare("CALL sp_eliminar_orden(?)");

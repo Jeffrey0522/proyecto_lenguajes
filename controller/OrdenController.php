@@ -88,9 +88,19 @@ class OrdenController
         $id = $_GET['id'];
         $resultado = $this->model->eliminarOrden($id);
 
-        if ($resultado) {
+        if ($resultado === true) {
             echo "<script>
                     localStorage.setItem('mensajeSistema','Orden eliminada correctamente');
+                    window.location='index.php?controlador=Orden&accion=mostrar';
+                  </script>";
+        } else if ($resultado === 'familias') {
+            echo "<script>
+                   localStorage.setItem('mensajeSistema','No se puede eliminar este orden porque tiene familias asociadas');
+                    window.location='index.php?controlador=Orden&accion=mostrar';
+                  </script>";
+        } else if ($resultado === 'subfamilias') {
+            echo "<script>
+                   localStorage.setItem('mensajeSistema','No se puede eliminar este orden porque tiene subfamilias asociadas');
                     window.location='index.php?controlador=Orden&accion=mostrar';
                   </script>";
         } else {

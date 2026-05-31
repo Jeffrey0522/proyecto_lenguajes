@@ -96,29 +96,42 @@ class RegistroEspecimenModel
             "CALL sp_registrar_especimen(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
 
-        $exito = $consulta->execute([
-            $datos['codigo_especimen'],
-            $datos['id_orden'],
-            $datos['id_familia'],
-            $datos['id_subfamilia'],
-            $datos['id_genero'],
-            $datos['id_especie'],
-            $datos['codigo_gaveta'],
-            $datos['codigo_vial'],
-            $datos['ubicacion_geografica'],
-            $datos['fecha_recoleccion'],
-            $datos['recolector'],
-            $datos['notas'],
-            $datos['id_usuario_registro'],
-            $datos['latitud'], 
-            $datos['longitud']  
-        ]);
+        try {
+            $exito = $consulta->execute([
+                $datos['codigo_especimen'],
+                $datos['id_orden'],
+                $datos['id_familia'],
+                $datos['id_subfamilia'],
+                $datos['id_genero'],
+                $datos['id_especie'],
+                $datos['codigo_gaveta'],
+                $datos['codigo_vial'],
+                $datos['ubicacion_geografica'],
+                $datos['fecha_recoleccion'],
+                $datos['recolector'],
+                $datos['notas'],
+                $datos['id_usuario_registro'],
+                $datos['latitud'],
+                $datos['longitud']
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception($this->limpiarMensajeRegistro($e->getMessage()));
+        }
 
         if (!$exito) {
             $errorInfo = $consulta->errorInfo();
-            throw new Exception("BD: " . $errorInfo[2]);
+            throw new Exception($this->limpiarMensajeRegistro($errorInfo[2]));
         }
         $consulta->closeCursor();
+    }
+
+    private function limpiarMensajeRegistro($mensaje)
+    {
+        if (strpos($mensaje, '1062') !== false && strpos($mensaje, 'PRIMARY') !== false) {
+            return "El codigo del especimen ya existe.";
+        }
+
+        return $mensaje;
     }
 
     public function asociarImagen($codigo_especimen, $ruta)

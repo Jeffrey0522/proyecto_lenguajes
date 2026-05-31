@@ -49,19 +49,40 @@ class vialModel
     public function actualizar($codigo, $medioConservacion, $codigoCaja)
     {
         $consulta = $this->db->prepare("CALL sp_actualizar_vial(?, ?, ?)");
-        $resultado = $consulta->execute(array($codigo, $medioConservacion, $codigoCaja));
+        try {
+            if (!$consulta->execute(array($codigo, $medioConservacion, $codigoCaja))) {
+                $error = $consulta->errorInfo();
+                throw new Exception($this->limpiarMensajeBD($error[2]));
+            }
+        } catch (PDOException $e) {
+            throw new Exception($this->limpiarMensajeBD($e->getMessage()));
+        }
         $consulta->closeCursor();
-        return $resultado;
+        return true;
     }
     
     public function eliminar($codigo)
     {
         $consulta = $this->db->prepare("CALL sp_eliminar_vial(?)");
-        if (!$consulta->execute(array($codigo))) {
-            $error = $consulta->errorInfo();
-            throw new Exception($error[2]);
+        try {
+            if (!$consulta->execute(array($codigo))) {
+                $error = $consulta->errorInfo();
+                throw new Exception($this->limpiarMensajeBD($error[2]));
+            }
+        } catch (PDOException $e) {
+            throw new Exception($this->limpiarMensajeBD($e->getMessage()));
         }
         $consulta->closeCursor();
         return true;
+    }
+
+    private function limpiarMensajeBD($mensaje)
+    {
+        if (strpos($mensaje, '1644') !== false) {
+            $partes = explode('1644', $mensaje, 2);
+            return trim($partes[1]);
+        }
+
+        return $mensaje;
     }
 }

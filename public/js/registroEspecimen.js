@@ -760,7 +760,7 @@ document.addEventListener('DOMContentLoaded', function () {
             mostrarModal(data.mensaje);
             setTimeout(() => window.location.reload(), 2000);
         } else {
-            mostrarModal('Error: ' + data.error);
+            mostrarModal(data.error);
         }
     });
 

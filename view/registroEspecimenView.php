@@ -142,6 +142,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>Codigo</th>
                     <th>Orden</th>
                     <th>Familia</th>
                     <th>Subfamilia</th>
@@ -154,6 +155,7 @@
                 <?php if (isset($especimenes) && count($especimenes) > 0) {
                     foreach ($especimenes as $e) { ?>
                         <tr>
+                            <td><input type="text" value="<?php echo $e['codigo']; ?>" readonly></td>
                             <td><input type="text" value="<?php echo $e['orden']; ?>" readonly></td>
                             <td><input type="text" value="<?php echo $e['familia']; ?>" readonly></td>
                             <td><input type="text" value="<?php echo $e['subfamilia']; ?>" readonly></td>
@@ -191,7 +193,7 @@
                     <?php }
                 } else { ?>
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 20px;">No hay especimenes registrados en la base de datos.</td>
+                        <td colspan="7" style="text-align: center; padding: 20px;">No hay especimenes registrados en la base de datos.</td>
                     </tr>
                 <?php } ?>
             </tbody>

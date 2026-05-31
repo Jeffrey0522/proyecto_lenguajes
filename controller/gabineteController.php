@@ -16,6 +16,7 @@ class gabineteController
 
         $data['gabinetes'] = $gabinete->listar();
         $data['mensaje'] = null;
+        $data['tipoMensaje'] = null;
 
         $this->view->show("gabineteView.php", $data);
     }
@@ -24,21 +25,29 @@ class gabineteController
     {
         $gabinete = new gabineteModel();
 
-        $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : null;
-        $ubicacion = isset($_POST['ubicacion']) ? $_POST['ubicacion'] : null;
+        $codigo = trim(isset($_POST['codigo']) ? $_POST['codigo'] : "");
+        $ubicacion = trim(isset($_POST['ubicacion']) ? $_POST['ubicacion'] : "");
 
         // temporal, después se toma de $_SESSION
         $idUsuario = 'Admin';
 
-        if ($codigo != null && $ubicacion != null && $codigo != "" && $ubicacion != "") {
+        if ($codigo != "" && $ubicacion != "") {
             try {
-                $gabinete->registrar($codigo, $ubicacion, $idUsuario);
-                $data['mensaje'] = "Gabinete registrado correctamente.";
+                if ($gabinete->existeGabinete($codigo)) {
+                    $data['mensaje'] = "Ya existe un gabinete con ese cÃ³digo.";
+                    $data['tipoMensaje'] = "error";
+                } else {
+                    $gabinete->registrar($codigo, $ubicacion, $idUsuario);
+                    $data['mensaje'] = "Gabinete registrado correctamente.";
+                    $data['tipoMensaje'] = "exito";
+                }
             } catch (Exception $e) {
                 $data['mensaje'] = "Error al registrar gabinete.";
+                $data['tipoMensaje'] = "error";
             }
         } else {
             $data['mensaje'] = "Debe completar todos los campos.";
+            $data['tipoMensaje'] = "error";
         }
 
         $data['gabinetes'] = $gabinete->listar();
@@ -72,11 +81,14 @@ class gabineteController
             try {
                 $gabinete->eliminar($codigo);
                 $data['mensaje'] = "Gabinete eliminado correctamente.";
+                $data['tipoMensaje'] = "exito";
             } catch (Exception $e) {
-                $data['mensaje'] = "Error: " . $e->getMessage();
+                $data['mensaje'] = $e->getMessage();
+                $data['tipoMensaje'] = "error";
             }
         } else {
             $data['mensaje'] = "No se recibió el código del gabinete.";
+            $data['tipoMensaje'] = "error";
         }
 
         $data['gabinetes'] = $gabinete->listar();

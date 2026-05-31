@@ -6,7 +6,7 @@
 
         <h2>
             <?php
-                if (strpos($mensaje, 'Error') !== false) {
+                if ((isset($tipoMensaje) && $tipoMensaje === 'error') || strpos($mensaje, 'Error') !== false) {
                     echo '¡Error!';
                 } else {
                     echo '¡Registro Exitoso!';

@@ -18,6 +18,7 @@ class vialController
         $data['viales'] = $vial->listar();
         $data['cajas'] = $caja->listar();
         $data['mensaje'] = null;
+        $data['tipoMensaje'] = null;
 
         $this->view->show("vialView.php", $data);
     }
@@ -37,16 +38,21 @@ class vialController
 
             if (!$caja->existeCodigo($codigoCaja)) {
                 $data['mensaje'] = "La caja seleccionada no existe.";
+                $data['tipoMensaje'] = "error";
             } else if ($vial->existeCodigo($codigo)) {
                 $data['mensaje'] = "Ya existe un vial con ese código.";
+                $data['tipoMensaje'] = "error";
             } else if (!$caja->tieneCapacidadDisponible($codigoCaja)) {
                 $data['mensaje'] = "La caja seleccionada ya alcanzó su capacidad máxima.";
+                $data['tipoMensaje'] = "error";
             } else {
                 $vial->registrar($codigo, $medioConservacion, $codigoCaja, $idUsuario);
                 $data['mensaje'] = "Vial registrado correctamente.";
+                $data['tipoMensaje'] = "exito";
             }
         } else {
             $data['mensaje'] = "Debe completar todos los campos.";
+            $data['tipoMensaje'] = "error";
         }
 
         $data['viales'] = $vial->listar();
@@ -68,12 +74,20 @@ class vialController
 
             if (!$caja->existeCodigo($codigoCaja)) {
                 $data['mensaje'] = "La caja seleccionada no existe.";
+                $data['tipoMensaje'] = "error";
             } else {
-                $vial->actualizar($codigo, $medioConservacion, $codigoCaja);
-                $data['mensaje'] = "Vial actualizado correctamente.";
+                try {
+                    $vial->actualizar($codigo, $medioConservacion, $codigoCaja);
+                    $data['mensaje'] = "Vial actualizado correctamente.";
+                    $data['tipoMensaje'] = "exito";
+                } catch (Exception $e) {
+                    $data['mensaje'] = $e->getMessage();
+                    $data['tipoMensaje'] = "error";
+                }
             }
         } else {
             $data['mensaje'] = "Debe completar todos los campos.";
+            $data['tipoMensaje'] = "error";
         }
 
         $data['viales'] = $vial->listar();
@@ -92,11 +106,14 @@ class vialController
             try {
                 $vial->eliminar($codigo);
                 $data['mensaje'] = "Vial eliminado correctamente.";
+                $data['tipoMensaje'] = "exito";
             } catch (Exception $e) {
-                $data['mensaje'] = "Error: " . $e->getMessage();
+                $data['mensaje'] = $e->getMessage();
+                $data['tipoMensaje'] = "error";
             }
         } else {
             $data['mensaje'] = "No se recibió el código del vial.";
+            $data['tipoMensaje'] = "error";
         }
 
         $data['viales'] = $vial->listar();

@@ -2,15 +2,18 @@
 
 require_once 'libs/SPDO.php';
 
-class SubFamiliaModel {
+class SubFamiliaModel
+{
 
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = SPDO::singleton();
     }
 
-    public function listarSubFamilias() {
+    public function listarSubFamilias()
+    {
 
         $consulta = $this->db->prepare("CALL sp_listar_subfamilias()");
 
@@ -23,7 +26,8 @@ class SubFamiliaModel {
         return $datos;
     }
 
-    public function insertarSubFamilia($nombre, $idOrden, $idFamilia, $idUsuario) {
+    public function insertarSubFamilia($nombre, $idOrden, $idFamilia, $idUsuario)
+    {
 
         $consulta = $this->db->prepare("CALL sp_insertar_subfamilia(?, ?, ?, ?)");
 
@@ -39,7 +43,8 @@ class SubFamiliaModel {
         return $resultado;
     }
 
-    public function buscarSubFamilias($busqueda, $idOrden = 0, $idFamilia = 0) {
+    public function buscarSubFamilias($busqueda, $idOrden = 0, $idFamilia = 0)
+    {
 
         $consulta = $this->db->prepare("CALL sp_buscar_subfamilias(?, ?, ?)");
 
@@ -56,7 +61,8 @@ class SubFamiliaModel {
         return $datos;
     }
 
-    public function actualizarSubFamilia($id, $nombre, $idOrden, $idFamilia) {
+    public function actualizarSubFamilia($id, $nombre, $idOrden, $idFamilia)
+    {
 
         $consulta = $this->db->prepare("CALL sp_actualizar_subfamilia(?, ?, ?, ?)");
 
@@ -72,7 +78,8 @@ class SubFamiliaModel {
         return $resultado;
     }
 
-    public function eliminarSubFamilia($id) {
+    public function eliminarSubFamilia($id)
+    {
 
         $validacion = $this->db->prepare("
             SELECT COUNT(*) AS total
@@ -102,5 +109,21 @@ class SubFamiliaModel {
 
         return $resultado;
     }
+    public function existeSubFamilia($nombre)
+    {
+
+        $consulta = $this->db->prepare(
+            "SELECT COUNT(*) AS total FROM sub_familias WHERE nombre = ?"
+        );
+
+        $consulta->bindParam(1, $nombre);
+
+        $consulta->execute();
+
+        $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        $consulta->closeCursor();
+
+        return $resultado['total'] > 0;
+    }
 }
-?>

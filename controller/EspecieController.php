@@ -3,19 +3,22 @@
 require_once 'model/EspecieModel.php';
 require_once 'model/GeneroModel.php';
 
-class EspecieController {
+class EspecieController
+{
 
     private $model;
     private $generoModel;
 
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->model = new EspecieModel();
 
         $this->generoModel = new GeneroModel();
     }
 
-    public function mostrar() {
+    public function mostrar()
+    {
 
         $especies = $this->model->listarEspecies();
 
@@ -24,7 +27,8 @@ class EspecieController {
         require_once 'view/especieView.php';
     }
 
-    public function registrar() {
+    public function registrar()
+    {
 
         $nombreCientifico = trim($_POST['nombre_cientifico']) !== '' ? trim($_POST['nombre_cientifico']) : null;
 
@@ -39,10 +43,26 @@ class EspecieController {
         if ($nombreCientifico === null && $nombreComun === null) {
 
             echo "<script>
-                    localStorage.setItem('mensajeSistema','Debe ingresar al menos el nombre común o el nombre científico');
-                    window.location='index.php?controlador=Especie&accion=mostrar';
-                  </script>";
+            localStorage.setItem('mensajeSistema','Debe ingresar al menos el nombre común o el nombre científico');
+            window.location='index.php?controlador=Especie&accion=mostrar';
+          </script>";
 
+            return;
+        }
+
+        if ($this->model->existeNombreCientifico($nombreCientifico)) {
+            echo "<script>
+            localStorage.setItem('mensajeSistema','Ya existe una especie con ese nombre científico');
+            window.location='index.php?controlador=Especie&accion=mostrar';
+          </script>";
+            return;
+        }
+
+        if ($this->model->existeNombreComun($nombreComun)) {
+            echo "<script>
+            localStorage.setItem('mensajeSistema','Ya existe una especie con ese nombre común');
+            window.location='index.php?controlador=Especie&accion=mostrar';
+          </script>";
             return;
         }
 
@@ -59,7 +79,6 @@ class EspecieController {
                     localStorage.setItem('mensajeSistema','Especie registrada correctamente');
                     window.location='index.php?controlador=Especie&accion=mostrar';
                   </script>";
-
         } catch (Exception $e) {
             echo "<script>
                     localStorage.setItem('mensajeSistema','Error al registrar especie: " . addslashes($e->getMessage()) . "');
@@ -68,14 +87,14 @@ class EspecieController {
         }
     }
 
-    public function buscar() {
+    public function buscar()
+    {
 
         $busqueda = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
 
         if ($busqueda == '') {
 
             $especies = $this->model->listarEspecies();
-
         } else {
 
             $especies = $this->model->buscarEspecies($busqueda);
@@ -85,7 +104,8 @@ class EspecieController {
         require_once 'view/especieView.php';
     }
 
-    public function actualizar() {
+    public function actualizar()
+    {
 
         $id = $_POST['id'];
         $nombreCientifico = $_POST['nombre_cientifico'];
@@ -113,7 +133,8 @@ class EspecieController {
                 window.location='index.php?controlador=Especie&accion=mostrar';
               </script>";
     }
-    public function eliminar() {
+    public function eliminar()
+    {
 
         $id = $_GET['id'];
 
@@ -132,4 +153,3 @@ class EspecieController {
         }
     }
 }
-?>

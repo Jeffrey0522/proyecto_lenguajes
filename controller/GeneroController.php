@@ -4,57 +4,74 @@ require_once 'model/GeneroModel.php';
 require_once 'model/FamiliaModel.php';
 require_once 'model/SubFamiliaModel.php';
 
-class GeneroController {
+class GeneroController
+{
 
     private $model;
     private $familiaModel;
     private $subFamiliaModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new GeneroModel();
         $this->familiaModel = new FamiliaModel();
         $this->subFamiliaModel = new SubFamiliaModel();
     }
 
-    public function mostrar() {
+    public function mostrar()
+    {
         $generos = $this->model->listarGeneros();
         $familias = $this->familiaModel->listarFamilias();
         $subfamilias = $this->subFamiliaModel->listarSubFamilias();
         require_once 'view/generoView.php';
     }
 
-    public function registrar() {
+    public function registrar()
+    {
 
         $nombre = $_POST['nombre'];
         $idFamilia = $_POST['id_familia'];
         $idSubFamilia = $_POST['id_sub_familia'];
         $idUsuario = 1;
 
-        $this->model->insertarGenero(
+        if ($this->model->existeGenero($nombre)) {
+            echo "<script>
+                localStorage.setItem('mensajeSistema','Ya existe un género con ese nombre');
+                window.location='index.php?controlador=Genero&accion=mostrar';
+              </script>";
+            return;
+        }
+
+        $resultado = $this->model->insertarGenero(
             $nombre,
             $idFamilia,
             $idSubFamilia,
             $idUsuario
         );
 
-        echo "<script>
+        if ($resultado) {
+            echo "<script>
                 localStorage.setItem('mensajeSistema','Género registrado correctamente');
                 window.location='index.php?controlador=Genero&accion=mostrar';
               </script>";
+        } else {
+            echo "<script>
+                localStorage.setItem('mensajeSistema','No se pudo registrar el género');
+                window.location='index.php?controlador=Genero&accion=mostrar';
+              </script>";
+        }
     }
-
-    public function buscar() {
+    public function buscar()
+    {
 
         $busqueda = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
 
         if ($busqueda == '') {
 
             $generos = $this->model->listarGeneros();
-
         } else {
 
             $generos = $this->model->buscarGeneros($busqueda, 0, 0);
-
         }
 
         $familias = $this->familiaModel->listarFamilias();
@@ -63,7 +80,8 @@ class GeneroController {
         require_once 'view/generoView.php';
     }
 
-    public function actualizar() {
+    public function actualizar()
+    {
 
         $id = $_POST['id'];
         $nombre = $_POST['nombre'];
@@ -83,7 +101,8 @@ class GeneroController {
               </script>";
     }
 
-    public function eliminar() {
+    public function eliminar()
+    {
 
         $id = $_GET['id'];
 
@@ -95,15 +114,12 @@ class GeneroController {
                   localStorage.setItem('mensajeSistema','Género eliminado correctamente');
                     window.location='index.php?controlador=Genero&accion=mostrar';
                   </script>";
-
         } else {
 
             echo "<script>
                    localStorage.setItem('mensajeSistema','No se puede eliminar este género porque tiene especies asociadas');
                     window.location='index.php?controlador=Genero&accion=mostrar';
                   </script>";
-
         }
     }
 }
-?>

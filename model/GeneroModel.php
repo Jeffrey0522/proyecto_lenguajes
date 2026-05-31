@@ -72,5 +72,21 @@ class GeneroModel {
         $consulta->closeCursor();
         return $resultado;
     }
+    
+
+public function existeGenero($nombre) {
+    $consulta = $this->db->prepare(
+        "SELECT COUNT(*) AS total FROM generos WHERE nombre = ?"
+    );
+
+    $consulta->bindParam(1, $nombre);
+    $consulta->execute();
+
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    $consulta->closeCursor();
+
+    return $resultado['total'] > 0;
+}
 }
 ?>

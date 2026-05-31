@@ -3,28 +3,40 @@
 require_once 'model/FamiliaModel.php';
 require_once 'model/OrdenModel.php';
 
-class FamiliaController {
+class FamiliaController
+{
 
     private $model;
     private $ordenModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new FamiliaModel();
         $this->ordenModel = new OrdenModel();
     }
 
-    public function mostrar() {
+    public function mostrar()
+    {
         $familias = $this->model->listarFamilias();
         $ordenes = $this->ordenModel->listarOrdenes();
         require_once 'view/familiaView.php';
     }
 
-    public function registrar() {
+    public function registrar()
+    {
         $nombre = $_POST['nombre'];
         $idOrden = $_POST['id_orden'];
         $idUsuario = 1;
-        $resultado = $this->model->insertarFamilia($nombre, $idOrden, $idUsuario);
 
+        if ($this->model->existeFamilia($nombre)) {
+            echo "<script>
+                localStorage.setItem('mensajeSistema','Ya existe una familia con ese nombre');
+                window.location='index.php?controlador=Familia&accion=mostrar';
+              </script>";
+            return;
+        }
+
+        $resultado = $this->model->insertarFamilia($nombre, $idOrden, $idUsuario);
         if ($resultado) {
             echo "<script>
                     localStorage.setItem('mensajeSistema','Familia registrada correctamente');
@@ -38,7 +50,8 @@ class FamiliaController {
         }
     }
 
-    public function buscar() {
+    public function buscar()
+    {
         $busqueda = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
 
         if ($busqueda == '') {
@@ -51,7 +64,8 @@ class FamiliaController {
         require_once 'view/familiaView.php';
     }
 
-    public function actualizar() {
+    public function actualizar()
+    {
         $id = $_POST['id'];
         $nombre = $_POST['nombre'];
         $idOrden = $_POST['id_orden'];
@@ -70,7 +84,8 @@ class FamiliaController {
         }
     }
 
-    public function eliminar() {
+    public function eliminar()
+    {
         $id = $_GET['id'];
         $resultado = $this->model->eliminarFamilia($id);
 
@@ -87,4 +102,3 @@ class FamiliaController {
         }
     }
 }
-?>

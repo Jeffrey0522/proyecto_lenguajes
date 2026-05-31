@@ -78,5 +78,44 @@ class EspecieModel {
         $consulta->closeCursor();
         return $resultado;
     }
+    public function existeNombreCientifico($nombreCientifico) {
+
+    if ($nombreCientifico === null) {
+        return false;
+    }
+
+    $consulta = $this->db->prepare(
+        "SELECT COUNT(*) AS total FROM especies WHERE nombre_cientifico = ?"
+    );
+
+    $consulta->bindParam(1, $nombreCientifico);
+    $consulta->execute();
+
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    $consulta->closeCursor();
+
+    return $resultado['total'] > 0;
+}
+
+public function existeNombreComun($nombreComun) {
+
+    if ($nombreComun === null) {
+        return false;
+    }
+
+    $consulta = $this->db->prepare(
+        "SELECT COUNT(*) AS total FROM especies WHERE nombre_comun = ?"
+    );
+
+    $consulta->bindParam(1, $nombreComun);
+    $consulta->execute();
+
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    $consulta->closeCursor();
+
+    return $resultado['total'] > 0;
+}
 }
 ?>

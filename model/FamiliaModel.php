@@ -2,15 +2,18 @@
 
 require_once 'libs/SPDO.php';
 
-class FamiliaModel {
+class FamiliaModel
+{
 
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = SPDO::singleton();
     }
 
-    public function listarFamilias() {
+    public function listarFamilias()
+    {
 
         $consulta = $this->db->prepare("CALL sp_listar_familias()");
 
@@ -23,7 +26,8 @@ class FamiliaModel {
         return $datos;
     }
 
-    public function insertarFamilia($nombre, $idOrden, $idUsuario) {
+    public function insertarFamilia($nombre, $idOrden, $idUsuario)
+    {
 
         $consulta = $this->db->prepare("CALL sp_insertar_familia(?, ?, ?)");
 
@@ -38,7 +42,8 @@ class FamiliaModel {
         return $resultado;
     }
 
-    public function buscarFamilias($busqueda, $idOrden = 0) {
+    public function buscarFamilias($busqueda, $idOrden = 0)
+    {
 
         $consulta = $this->db->prepare("CALL sp_buscar_familias(?, ?)");
 
@@ -54,7 +59,8 @@ class FamiliaModel {
         return $datos;
     }
 
-    public function actualizarFamilia($id, $nombre, $idOrden) {
+    public function actualizarFamilia($id, $nombre, $idOrden)
+    {
 
         $consulta = $this->db->prepare("CALL sp_actualizar_familia(?, ?, ?)");
 
@@ -69,7 +75,8 @@ class FamiliaModel {
         return $resultado;
     }
 
-    public function eliminarFamilia($id) {
+    public function eliminarFamilia($id)
+    {
 
         $consulta = $this->db->prepare("CALL sp_eliminar_familia(?)");
 
@@ -81,5 +88,21 @@ class FamiliaModel {
 
         return $resultado;
     }
+    public function existeFamilia($nombre)
+    {
+
+        $consulta = $this->db->prepare(
+            "SELECT COUNT(*) AS total FROM familias WHERE nombre = ?"
+        );
+
+        $consulta->bindParam(1, $nombre);
+
+        $consulta->execute();
+
+        $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        $consulta->closeCursor();
+
+        return $resultado['total'] > 0;
+    }
 }
-?>

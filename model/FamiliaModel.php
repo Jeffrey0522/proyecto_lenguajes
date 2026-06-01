@@ -77,6 +77,35 @@ class FamiliaModel
 
     public function eliminarFamilia($id)
     {
+        $validacionSubFamilias = $this->db->prepare("
+        SELECT COUNT(*) AS total
+        FROM sub_familias
+        WHERE id_familia = ?
+    ");
+
+        $validacionSubFamilias->bindParam(1, $id);
+        $validacionSubFamilias->execute();
+        $resultadoSubFamilias = $validacionSubFamilias->fetch(PDO::FETCH_ASSOC);
+        $validacionSubFamilias->closeCursor();
+
+        if ($resultadoSubFamilias['total'] > 0) {
+            return false;
+        }
+
+        $validacionGeneros = $this->db->prepare("
+        SELECT COUNT(*) AS total
+        FROM generos
+        WHERE id_familia = ?
+    ");
+
+        $validacionGeneros->bindParam(1, $id);
+        $validacionGeneros->execute();
+        $resultadoGeneros = $validacionGeneros->fetch(PDO::FETCH_ASSOC);
+        $validacionGeneros->closeCursor();
+
+        if ($resultadoGeneros['total'] > 0) {
+            return false;
+        }
 
         $consulta = $this->db->prepare("CALL sp_eliminar_familia(?)");
 

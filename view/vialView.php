@@ -27,7 +27,31 @@ $mensaje = isset($mensaje) ? $mensaje : null;
     <button type="submit"> Registrar Vial </button>
 </form>
 <br>
-<table border="1">
+
+<h3>Cajas</h3>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+    <?php foreach ($cajas as $caja) { ?>
+        <button type="button"
+            class="btn-caja"
+            data-caja="<?php echo $caja['codigo']; ?>"
+            onclick="mostrarVialesPorCaja('<?php echo $caja['codigo']; ?>')">
+            <?php echo $caja['codigo']; ?>
+        </button>
+    <?php } ?>
+</div>
+
+<h3 id="tituloViales" style="display:none;">Viales de la caja <span id="codigoCajaSeleccionada"></span></h3>
+
+<p id="mensajeSeleccionCaja" style="font-weight: bold;">
+    Seleccione una caja para ver sus viales.
+</p>
+
+<p id="mensajeSinViales" style="display:none; font-weight: bold;">
+    Esta caja no tiene viales registrados.
+</p>
+
+<table border="1" id="tablaViales" style="display:none;">
     <thead>
         <tr>
             <th>Código</th>
@@ -39,7 +63,7 @@ $mensaje = isset($mensaje) ? $mensaje : null;
     </thead>
     <tbody>
         <?php foreach ($viales as $v) { ?>
-            <tr>
+            <tr class="fila-vial" data-caja="<?php echo $v['codigo_caja']; ?>">
                 <td><?php echo $v['codigo']; ?></td>
                 <td><?php echo $v['medio_conservacion']; ?></td>
                 <td><?php echo $v['codigo_caja']; ?></td>
@@ -76,6 +100,38 @@ $mensaje = isset($mensaje) ? $mensaje : null;
 <script>
     function cerrarModal() {
         document.getElementById("modalMensaje").style.display = "none";
+    }
+
+    function mostrarVialesPorCaja(codigoCaja) {
+        const tabla = document.getElementById("tablaViales");
+        const filas = document.querySelectorAll(".fila-vial");
+        const titulo = document.getElementById("tituloViales");
+        const codigoSeleccionado = document.getElementById("codigoCajaSeleccionada");
+        const mensajeSeleccion = document.getElementById("mensajeSeleccionCaja");
+        const mensajeSinViales = document.getElementById("mensajeSinViales");
+        const botones = document.querySelectorAll(".btn-caja");
+        let cantidadVisible = 0;
+
+        botones.forEach(function (boton) {
+            const activo = boton.getAttribute("data-caja") === codigoCaja;
+            boton.style.background = activo ? "#1E3A5F" : "";
+            boton.style.color = activo ? "#fff" : "";
+        });
+
+        filas.forEach(function (fila) {
+            if (fila.getAttribute("data-caja") === codigoCaja) {
+                fila.style.display = "";
+                cantidadVisible++;
+            } else {
+                fila.style.display = "none";
+            }
+        });
+
+        codigoSeleccionado.innerText = codigoCaja;
+        titulo.style.display = "block";
+        mensajeSeleccion.style.display = "none";
+        tabla.style.display = cantidadVisible > 0 ? "table" : "none";
+        mensajeSinViales.style.display = cantidadVisible > 0 ? "none" : "block";
     }
 </script>
 <?php include_once 'public/footer.php'; ?>

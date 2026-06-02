@@ -216,12 +216,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }).addTo(map);
 
     let marker;
+    const latInput = document.getElementById('lat');
+    const lngInput = document.getElementById('lng');
+
+    function colocarMarcador(lat, lng, centrarMapa) {
+        const latLng = L.latLng(lat, lng);
+
+        if (marker) {
+            marker.setLatLng(latLng);
+        } else {
+            marker = L.marker(latLng).addTo(map);
+        }
+
+        if (centrarMapa) {
+            map.setView(latLng, 13);
+        }
+    }
+
+    function actualizarMapaDesdeInputs() {
+        const lat = parseFloat(latInput.value);
+        const lng = parseFloat(lngInput.value);
+
+        if (Number.isNaN(lat) || Number.isNaN(lng)) {
+            return;
+        }
+
+        if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+            return;
+        }
+
+        colocarMarcador(lat, lng, true);
+    }
+
     map.on('click', function (e) {
-        if (marker) map.removeLayer(marker);
-        marker = L.marker(e.latlng).addTo(map);
-        document.getElementById('lat').value = e.latlng.lat;
-        document.getElementById('lng').value = e.latlng.lng;
+        colocarMarcador(e.latlng.lat, e.latlng.lng, false);
+        latInput.value = e.latlng.lat.toFixed(8);
+        lngInput.value = e.latlng.lng.toFixed(8);
     });
+
+    latInput.addEventListener('input', actualizarMapaDesdeInputs);
+    lngInput.addEventListener('input', actualizarMapaDesdeInputs);
 
     // 2. Selectores de Taxonomía
 

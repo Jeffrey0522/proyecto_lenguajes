@@ -116,10 +116,10 @@
             <input type="text" id="dir_texto" name="ubicacion_geografica" placeholder="Ej: Sendero Principal, Volcan Turrialba">
 
             <label>Latitud (Opcional):</label>
-            <input type="text" id="lat" name="latitud" readonly>
+            <input type="text" id="lat" name="latitud" placeholder="Ej: 9.90000000">
 
             <label>Longitud (Opcional):</label>
-            <input type="text" id="lng" name="longitud" readonly>
+            <input type="text" id="lng" name="longitud" placeholder="Ej: -83.68000000">
 
             <div id="map" style="height: 300px; width: 100%; margin-top: 15px; border-radius: 8px;"></div>
 
@@ -131,6 +131,7 @@
 
             <label>Subir imagenes:</label>
             <input type="file" name="imagenes[]" accept=".jpg,.png" multiple>
+            <small style="display:block; margin-top: 5px;">Puede subir mas de una foto. Este campo es opcional.</small>
 
             <br><br>
             <button type="submit">Registrar especimen</button>

@@ -101,6 +101,11 @@ class RegistroEspecimenController
                 throw new Exception("El codigo del especimen es obligatorio.");
             }
 
+            $fecha_recoleccion = !empty($_POST['fecha_recoleccion']) ? $_POST['fecha_recoleccion'] : null;
+            if ($fecha_recoleccion && $fecha_recoleccion > date('Y-m-d')) {
+                throw new Exception("La fecha de recoleccion no puede ser posterior a la fecha actual.");
+            }
+
             if (!$id_orden || $id_orden === 'SP') {
                 throw new Exception("Debe seleccionar al menos un orden real para registrar el especimen.");
             }
@@ -121,7 +126,7 @@ class RegistroEspecimenController
                 'codigo_gaveta' => $codigo_gaveta,
                 'codigo_vial' => $codigo_vial,
                 'ubicacion_geografica' => !empty($_POST['ubicacion_geografica']) ? trim($_POST['ubicacion_geografica']) : null,
-                'fecha_recoleccion' => !empty($_POST['fecha_recoleccion']) ? $_POST['fecha_recoleccion'] : null,
+                'fecha_recoleccion' => $fecha_recoleccion,
                 'recolector' => !empty($_POST['recolector']) ? trim($_POST['recolector']) : null,
                 'notas' => !empty($_POST['notas']) ? trim($_POST['notas']) : null,
                 'latitud' => !empty($_POST['latitud']) ? $_POST['latitud'] : null,

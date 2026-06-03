@@ -14,7 +14,7 @@
             <input type="text" name="recolector" placeholder="Nombre de quien recolecto">
 
             <label>Fecha de Recoleccion:</label>
-            <input type="date" name="fecha_recoleccion">
+            <input type="date" name="fecha_recoleccion" max="<?php echo date('Y-m-d'); ?>">
 
             <br><br>
             <label>Orden:</label>

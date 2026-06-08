@@ -28,6 +28,7 @@
                 <a href="index.php?controlador=Gaveta&accion=mostrar" class="btn-nav">Gaveta</a>
                 <a href="index.php?controlador=Caja&accion=mostrar" class="btn-nav">Caja</a>
                 <a href="index.php?controlador=Vial&accion=mostrar" class="btn-nav">Vial</a>
+
             </div>
         </nav>
     </header>
@@ -43,6 +44,8 @@
             <a href="index.php?controlador=Genero&accion=mostrar">Género</a>
             <a href="index.php?controlador=Especie&accion=mostrar">Especie</a>
             <a href="index.php?controlador=RegistroEspecimen&accion=mostrar">Registro Especimen</a>
+            <a href="index.php?controlador=Planta&accion=mostrar" class="btn-nav">Registrar plantas</a>
+            <a href="index.php?controlador=bitacora&accion=mostrar" class="btn-nav">Bitácora</a>
             <a href="?controlador=Usuario&accion=cerrarSesion">Cerrar sesion</a>
         </aside>
 

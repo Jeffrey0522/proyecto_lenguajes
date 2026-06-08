@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
@@ -13,6 +15,128 @@ $accion = isset($_GET['accion']) ? $_GET['accion'] : '';
 
 switch ($accion) {
 
+    // =====================================================================
+    //  HU-19 (Dev 4): REGISTRO Y LOGIN USUARIO EXTERNO
+    // =====================================================================
+
+    case 'registrar_planta':
+
+        $datos = json_decode(file_get_contents("php://input"), true);
+
+        $stmt = $db->prepare(
+            "CALL sp_registrar_planta(?, ?, ?)"
+        );
+
+        $stmt->bindParam(1, $datos['nombre_comun']);
+        $stmt->bindParam(2, $datos['nombre_cientifico']);
+        $stmt->bindParam(3, $datos['descripcion']);
+
+        try {
+
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            echo json_encode([
+                "mensaje" => "Planta registrada"
+            ]);
+        } catch (PDOException $e) {
+
+            http_response_code(400);
+
+            echo json_encode([
+                "mensaje" => $e->getMessage()
+            ]);
+        }
+
+        break;
+
+    case 'listar_plantas':
+
+        $busqueda = isset($_GET['busqueda'])
+            ? $_GET['busqueda']
+            : '';
+
+        $stmt = $db->prepare(
+            "CALL sp_listar_plantas(?)"
+        );
+
+        $stmt->bindParam(1, $busqueda);
+
+        $stmt->execute();
+
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+
+        echo json_encode($datos);
+
+        break;
+
+    case 'obtener_planta':
+
+        $id = $_GET['id'];
+
+        $stmt = $db->prepare(
+            "CALL sp_obtener_planta(?)"
+        );
+
+        $stmt->bindParam(1, $id);
+
+        $stmt->execute();
+
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+
+        echo json_encode($datos);
+
+        break;
+
+    case 'actualizar_planta':
+
+        $datos = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
+
+        $stmt = $db->prepare(
+            "CALL sp_actualizar_planta(?, ?, ?, ?)"
+        );
+
+        $stmt->bindParam(1, $datos['id']);
+        $stmt->bindParam(2, $datos['nombre_comun']);
+        $stmt->bindParam(3, $datos['nombre_cientifico']);
+        $stmt->bindParam(4, $datos['descripcion']);
+
+        $stmt->execute();
+
+        $stmt->closeCursor();
+
+        echo json_encode([
+            "mensaje" => "Actualizada"
+        ]);
+
+        break;
+
+    case 'eliminar_planta':
+
+        $id = $_GET['id'];
+
+        $stmt = $db->prepare(
+            "CALL sp_eliminar_planta(?)"
+        );
+
+        $stmt->bindParam(1, $id);
+
+        $stmt->execute();
+
+        $stmt->closeCursor();
+
+        echo json_encode([
+            "mensaje" => "Eliminada"
+        ]);
+
+        break;
 
     case 'registrar_usuario':
         $datos = json_decode(file_get_contents("php://input"), true);
@@ -97,67 +221,67 @@ switch ($accion) {
         echo json_encode($datos);
         break;
 
-        case 'asociar_planta_especimen':
+    case 'asociar_planta_especimen':
 
-    $datos = json_decode(
-        file_get_contents("php://input"),
-        true
-    );
+        $datos = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
 
-    $stmt = $db->prepare(
-        "CALL sp_asociar_planta_especimen(?, ?)"
-    );
+        $stmt = $db->prepare(
+            "CALL sp_asociar_planta_especimen(?, ?)"
+        );
 
-    $stmt->bindParam(
-        1,
-        $datos['codigo_especimen']
-    );
+        $stmt->bindParam(
+            1,
+            $datos['codigo_especimen']
+        );
 
-    $stmt->bindParam(
-        2,
-        $datos['id_planta']
-    );
+        $stmt->bindParam(
+            2,
+            $datos['id_planta']
+        );
 
-    $stmt->execute();
+        $stmt->execute();
 
-    $stmt->closeCursor();
+        $stmt->closeCursor();
 
-    echo json_encode([
-        "mensaje" => "Asociación creada"
-    ]);
+        echo json_encode([
+            "mensaje" => "Asociación creada"
+        ]);
 
-break;
+        break;
 
-case 'eliminar_asociacion_planta':
+    case 'eliminar_asociacion_planta':
 
-    $datos = json_decode(
-        file_get_contents("php://input"),
-        true
-    );
+        $datos = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
 
-    $stmt = $db->prepare(
-        "CALL sp_eliminar_asociacion_planta(?, ?)"
-    );
+        $stmt = $db->prepare(
+            "CALL sp_eliminar_asociacion_planta(?, ?)"
+        );
 
-    $stmt->bindParam(
-        1,
-        $datos['codigo_especimen']
-    );
+        $stmt->bindParam(
+            1,
+            $datos['codigo_especimen']
+        );
 
-    $stmt->bindParam(
-        2,
-        $datos['id_planta']
-    );
+        $stmt->bindParam(
+            2,
+            $datos['id_planta']
+        );
 
-    $stmt->execute();
+        $stmt->execute();
 
-    $stmt->closeCursor();
+        $stmt->closeCursor();
 
-    echo json_encode([
-        "mensaje" => "Asociación eliminada"
-    ]);
+        echo json_encode([
+            "mensaje" => "Asociación eliminada"
+        ]);
 
-break;
+        break;
 
     // =====================================================================
     //  HU-21 (Dev 5): BÚSQUEDA POR NOMBRE CIENTÍFICO

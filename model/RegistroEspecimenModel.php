@@ -190,7 +190,7 @@ class RegistroEspecimenModel
 
     public function resolverTaxonomiaSP($id_orden, $id_familia, $id_subfamilia, $id_genero, $id_especie, $id_usuario)
     {
-        
+
         $consulta = $this->db->prepare("CALL sp_resolver_taxonomia(?, ?, ?, ?, ?, ?, @out_id)");
 
         // Si el procedimiento falla internamente, lo atrapa
@@ -247,6 +247,42 @@ class RegistroEspecimenModel
         $consulta = $this->db->prepare("CALL sp_obtener_imagen_carrusel(?, ?)");
         $consulta->execute([$codigo, $offset]);
         $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+        $consulta->closeCursor();
+        return $resultado;
+    }
+    // =====================
+    // HU-17: Plantas hospedadoras
+    // =====================
+    public function listarPlantasEspecimen($codigo)
+    {
+        $consulta = $this->db->prepare("CALL sp_obtener_plantas_por_especimen(?)");
+        $consulta->execute(array($codigo));
+        $datos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        $consulta->closeCursor();
+        return $datos;
+    }
+
+    public function listarTodasLasPlantas()
+    {
+        $consulta = $this->db->prepare("CALL sp_listar_plantas(?)");
+        $consulta->execute(array(""));
+        $datos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        $consulta->closeCursor();
+        return $datos;
+    }
+
+    public function asociarPlanta($codigo, $idPlanta)
+    {
+        $consulta = $this->db->prepare("CALL sp_asociar_planta_especimen(?, ?)");
+        $resultado = $consulta->execute(array($codigo, $idPlanta));
+        $consulta->closeCursor();
+        return $resultado;
+    }
+
+    public function eliminarPlantaEspecimen($codigo, $idPlanta)
+    {
+        $consulta = $this->db->prepare("CALL sp_eliminar_asociacion_planta(?, ?)");
+        $resultado = $consulta->execute(array($codigo, $idPlanta));
         $consulta->closeCursor();
         return $resultado;
     }

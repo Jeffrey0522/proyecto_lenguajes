@@ -12,6 +12,11 @@ class vialController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $vial = new vialModel();
         $caja = new cajaModel();
 

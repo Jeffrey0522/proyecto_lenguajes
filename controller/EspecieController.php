@@ -19,12 +19,18 @@ class EspecieController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
 
         $especies = $this->model->listarEspecies();
 
         $generos = $this->generoModel->listarGeneros();
 
         require_once 'view/especieView.php';
+        exit();
     }
 
     public function registrar()

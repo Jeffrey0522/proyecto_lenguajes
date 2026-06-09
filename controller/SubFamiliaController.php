@@ -20,10 +20,16 @@ class SubFamiliaController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $subfamilias = $this->model->listarSubFamilias();
         $ordenes = $this->ordenModel->listarOrdenes();
         $familias = $this->familiaModel->listarFamilias();
         require_once 'view/subFamiliaView.php';
+        exit();
     }
 
     public function registrar()

@@ -16,6 +16,11 @@ class RegistroEspecimenController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $ordenes = $this->model->listarOrdenes();
         $gabinetes = $this->model->listarGabinetes();
         $gavetas = $this->model->listarGavetas();
@@ -24,6 +29,7 @@ class RegistroEspecimenController
         $especimenes = $this->model->listarEspecimenes();
 
         require_once __DIR__ . '/../view/registroEspecimenView.php';
+        exit();
     }
 
     public function obtenerFamiliasPorOrden()

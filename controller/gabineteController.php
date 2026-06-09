@@ -12,6 +12,11 @@ class gabineteController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $gabinete = new gabineteModel();
 
         $data['gabinetes'] = $gabinete->listar();

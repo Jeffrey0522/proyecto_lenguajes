@@ -101,7 +101,7 @@
 </div>
 <div id="modalPlantas" class="modal-fondo" style="display:none;">
     <div class="modal-contenido" style="width: 500px; max-width: 95%;">
-        <h3 style="color: #1E3A5F; margin-bottom: 15px;">Plantas Hospedadoras</h3>
+        <h3 style="color: #1E3A5F; margin-bottom: 15px;">Planta Hospedadora</h3>
 
         <div style="background: #9fbce4; color: #1E3A5F; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
             <p style="font-size: 16px; margin: 0;">Espécimen: <strong id="txtCodigoPlantas"></strong></p>

@@ -27,29 +27,37 @@ class UsuarioController
     public function registrarUsuario()
     {
         $this->protegerRuta('1');
-        $cedula = $_POST['cedula'];
-        $nombre = $_POST['nombre'];
-        $apellido = $_POST['apellido'];
-        $correo = $_POST['correo'];
-        $nombreUsuario = $_POST['nombre_usuario'];
-        $rol = $_POST['rol'];
-        $contrasena = $_POST['contrasena'];
-        $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
+        try {
+            $cedula = $_POST['cedula'];
+            $nombre = $_POST['nombre'];
+            $apellido = $_POST['apellido'];
+            $correo = $_POST['correo'];
+            $nombreUsuario = $_POST['nombre_usuario'];
+            $rol = $_POST['rol'];
+            $contrasena = $_POST['contrasena'];
+            $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        $this->usuario->registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash, $rol, $_SESSION['username']);
-
+            $this->usuario->registrarUsuario($cedula, $nombre, $apellido, $correo, $nombreUsuario, $contrasenaHash, $rol, $_SESSION['username']);
+            $_SESSION['registrar_usuario'] = 'Usuario creado correctamente';
+        } catch (\Exception $th) {
+            $_SESSION['registrar_usuario'] = 'Cedula o correo en uso. No se pudo crear el usuario';
+        }
         $this->formularioCrearUsuario();
     }
 
     public function formularioLogin()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->view->show("formularioLoginView.php", null);
     }
 
     public function login()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $nombreUsuario = $_POST['nombre_usuario'];
         $contrasena = $_POST['contrasena'];
 
@@ -130,7 +138,9 @@ class UsuarioController
 
     public function formularioCambiarContrasena()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->view->show("cambiarContrasenaView.php", null);
     }
 
@@ -187,7 +197,9 @@ class UsuarioController
 
     public function cerrarSesion()
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         session_destroy();
         header("Location: ?");
         exit();
@@ -251,7 +263,9 @@ class UsuarioController
 
     private function protegerRuta($rolRequerido = null)
     {
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         if (!isset($_SESSION['username'])) {
             $this->cerrarSesion();
             exit();

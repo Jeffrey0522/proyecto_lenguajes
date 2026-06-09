@@ -41,56 +41,63 @@ class PlantaController
     // REGISTRAR
     // =====================
     public function registrar()
-    {
-        $planta = new PlantaModel();
+{
+    $planta = new PlantaModel();
 
-        $nombre_comun = isset($_POST['nombre_comun']) ? trim($_POST['nombre_comun']) : "";
-        $nombre_cientifico = isset($_POST['nombre_cientifico']) ? trim($_POST['nombre_cientifico']) : "";
-        $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
+    $nombre_comun = isset($_POST['nombre_comun']) ? trim($_POST['nombre_comun']) : "";
+    $nombre_cientifico = isset($_POST['nombre_cientifico']) ? trim($_POST['nombre_cientifico']) : "";
+    $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
 
-        if ($nombre_comun != "" && $nombre_cientifico != "") {
-
+    if ($nombre_comun != "" && $nombre_cientifico != "") {
+        try {
             $planta->registrar($nombre_comun, $nombre_cientifico, $descripcion);
-
             $data['mensaje'] = "Planta registrada correctamente.";
             $data['tipoMensaje'] = "exito";
-
-        } else {
-            $data['mensaje'] = "Nombre común y científico son obligatorios.";
+        } catch (Exception $e) {
+            $data['mensaje'] = "Error: ya existe una planta con ese nombre científico.";
             $data['tipoMensaje'] = "error";
         }
-
-        $data['plantas'] = $planta->listar();
-        $this->view->show("plantaView.php", $data);
+    } else {
+        $data['mensaje'] = "Nombre común y científico son obligatorios.";
+        $data['tipoMensaje'] = "error";
     }
 
-    // =====================
-    // ACTUALIZAR
-    // =====================
-    public function actualizar()
-    {
-        $planta = new PlantaModel();
+    $busqueda = "";
+    $data['plantas'] = $planta->listar($busqueda);
+    $data['busqueda'] = $busqueda;
+    $data['mostrarTabla'] = true;
+    $this->view->show("plantaView.php", $data);
+}
 
-        $id = isset($_POST['id']) ? $_POST['id'] : "";
-        $nombre_comun = isset($_POST['nombre_comun']) ? trim($_POST['nombre_comun']) : "";
-        $nombre_cientifico = isset($_POST['nombre_cientifico']) ? trim($_POST['nombre_cientifico']) : "";
-        $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
+public function actualizar()
+{
+    $planta = new PlantaModel();
 
-        if ($id != "" && $nombre_comun != "" && $nombre_cientifico != "") {
+    $id = isset($_POST['id']) ? $_POST['id'] : "";
+    $nombre_comun = isset($_POST['nombre_comun']) ? trim($_POST['nombre_comun']) : "";
+    $nombre_cientifico = isset($_POST['nombre_cientifico']) ? trim($_POST['nombre_cientifico']) : "";
+    $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
 
+    if ($id != "" && $nombre_comun != "" && $nombre_cientifico != "") {
+        try {
             $planta->actualizar($id, $nombre_comun, $nombre_cientifico, $descripcion);
-
             $data['mensaje'] = "Planta actualizada correctamente.";
             $data['tipoMensaje'] = "exito";
-
-        } else {
-            $data['mensaje'] = "Debe completar todos los campos obligatorios.";
+        } catch (Exception $e) {
+            $data['mensaje'] = "Error: ya existe una planta con ese nombre científico.";
             $data['tipoMensaje'] = "error";
         }
-
-        $data['plantas'] = $planta->listar();
-        $this->view->show("plantaView.php", $data);
+    } else {
+        $data['mensaje'] = "Debe completar todos los campos obligatorios.";
+        $data['tipoMensaje'] = "error";
     }
+
+    $busqueda = "";
+    $data['plantas'] = $planta->listar($busqueda);
+    $data['busqueda'] = $busqueda;
+    $data['mostrarTabla'] = true;
+    $this->view->show("plantaView.php", $data);
+}
 
     // =====================
     // ELIMINAR

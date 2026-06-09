@@ -101,6 +101,9 @@ $busqueda = isset($busqueda) ? $busqueda : "";
                             Eliminar
                         </a>
 
+                        <a href="?controlador=planta&accion=asociarEspecimen&id=<?php echo $p['id']; ?>">
+    Asociar Especímen
+</a>
                     </td>
                 </tr>
             <?php } ?>

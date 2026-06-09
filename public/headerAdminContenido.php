@@ -46,6 +46,7 @@
             <a href="index.php?controlador=RegistroEspecimen&accion=mostrar">Registro Especimen</a>
             <a href="index.php?controlador=Planta&accion=mostrar" class="btn-nav">Registrar plantas</a>
             <a href="index.php?controlador=bitacora&accion=mostrar" class="btn-nav">Bitácora</a>
+            
             <a href="?controlador=Usuario&accion=cerrarSesion">Cerrar sesion</a>
         </aside>
 

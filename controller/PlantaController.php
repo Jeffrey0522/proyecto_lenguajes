@@ -11,10 +11,6 @@ class PlantaController
             session_start();
         }
     }
-
-    // =====================
-    // MOSTRAR
-    // =====================
     public function mostrar()
 {
     $planta = new PlantaModel();
@@ -116,4 +112,110 @@ class PlantaController
         $data['plantas'] = $planta->listar();
         $this->view->show("plantaView.php", $data);
     }
+
+    public function asociarEspecimen()
+{
+    $planta = new PlantaModel();
+    $idPlanta = $_GET['id'];
+
+    $plantaData = $planta->obtener($idPlanta);
+    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+    $data['idPlanta'] = $idPlanta;
+    $data['planta'] = $plantaData;
+    $data['especimenes'] = array();
+    $data['especimenesAsociados'] = $especimenesAsociados;
+
+    $this->view->show("asociarEspecimenView.php", $data);
+}
+
+public function buscarEspecimen()
+{
+    $planta = new PlantaModel();
+
+    $busqueda = $_POST['busqueda'];
+    $idPlanta = $_POST['idPlanta'];
+
+    $plantaData = $planta->obtener($idPlanta);
+    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+    $data['idPlanta'] = $idPlanta;
+    $data['planta'] = $plantaData;
+    $data['especimenes'] = $planta->buscarPorNombreCientifico($busqueda);
+    $data['especimenesAsociados'] = $especimenesAsociados;
+
+    $this->view->show("asociarEspecimenView.php", $data);
+}
+
+public function guardarAsociacion()
+{
+    $planta = new PlantaModel();
+
+    $codigoEspecimen = $_POST['codigoEspecimen'];
+    $idPlanta = $_POST['idPlanta'];
+
+    $resultado = $planta->asociarEspecimen(
+        $codigoEspecimen,
+        $idPlanta
+    );
+
+    if ($resultado) {
+        $data['mensaje'] =
+            "Especímen asociado a la planta correctamente.";
+        $data['tipoMensaje'] = "exito";
+    } else {
+        $data['mensaje'] =
+            "Error al asociar el especímen.";
+        $data['tipoMensaje'] = "error";
+    }
+
+    $plantaData = $planta->obtener($idPlanta);
+    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+    $data['idPlanta'] = $idPlanta;
+    $data['planta'] = $plantaData;
+    $data['especimenes'] = array();
+    $data['especimenesAsociados'] = $especimenesAsociados;
+
+    $this->view->show(
+        "asociarEspecimenView.php",
+        $data
+    );
+}
+
+public function eliminarAsociacion()
+{
+    $planta = new PlantaModel();
+
+    $codigoEspecimen = $_POST['codigoEspecimen'];
+    $idPlanta = $_POST['idPlanta'];
+
+    $resultado = $planta->eliminarAsociacion(
+        $codigoEspecimen,
+        $idPlanta
+    );
+
+    if ($resultado) {
+        $data['mensaje'] =
+            "Asociación eliminada correctamente.";
+        $data['tipoMensaje'] = "exito";
+    } else {
+        $data['mensaje'] =
+            "Error al eliminar la asociación.";
+        $data['tipoMensaje'] = "error";
+    }
+
+    $plantaData = $planta->obtener($idPlanta);
+    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+    $data['idPlanta'] = $idPlanta;
+    $data['planta'] = $plantaData;
+    $data['especimenes'] = array();
+    $data['especimenesAsociados'] = $especimenesAsociados;
+
+    $this->view->show(
+        "asociarEspecimenView.php",
+        $data
+    );
+}
 }

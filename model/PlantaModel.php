@@ -64,4 +64,76 @@ class PlantaModel
         $consulta->closeCursor();
         return $resultado;
     }
+public function buscarPorNombreCientifico($nombre)
+{
+    $consulta = $this->db->prepare(
+        "CALL sp_buscar_especimen_por_nombre(?, ?, ?)"
+    );
+
+    $consulta->execute(array(
+        $nombre,
+        0,
+        100
+    ));
+
+    $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+    $consulta->closeCursor();
+
+    return $resultado;
+}
+
+public function asociarEspecimen(
+    $codigoEspecimen,
+    $idPlanta
+)
+{
+    $consulta = $this->db->prepare(
+        "CALL sp_asociar_planta_especimen(?, ?)"
+    );
+
+    $resultado = $consulta->execute(
+        array(
+            $codigoEspecimen,
+            $idPlanta
+        )
+    );
+
+    $consulta->closeCursor();
+
+    return $resultado;
+}
+
+public function verEspecimenesAsociados($nombreCientifico)
+{
+    $consulta = $this->db->prepare(
+        "CALL sp_ver_especimenes_plantas(?)"
+    );
+
+    $consulta->execute(array($nombreCientifico));
+
+    $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+    $consulta->closeCursor();
+
+    return $resultado;
+}
+
+public function eliminarAsociacion($codigoEspecimen, $idPlanta)
+{
+    $consulta = $this->db->prepare(
+        "CALL sp_eliminar_asociacion_planta(?, ?)"
+    );
+
+    $resultado = $consulta->execute(
+        array(
+            $codigoEspecimen,
+            $idPlanta
+        )
+    );
+
+    $consulta->closeCursor();
+
+    return $resultado;
+}
 }

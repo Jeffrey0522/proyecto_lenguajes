@@ -255,4 +255,51 @@ class RegistroEspecimenController
             exit;
         }
     }
+    // =====================
+    // HU-17: Plantas hospedadoras
+    // =====================
+    public function listarPlantasEspecimen()
+    {
+        header('Content-Type: application/json');
+        $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : '';
+        $plantas = $this->model->listarPlantasEspecimen($codigo);
+        echo json_encode($plantas);
+    }
+
+    public function listarTodasLasPlantas()
+    {
+        header('Content-Type: application/json');
+        $plantas = $this->model->listarTodasLasPlantas();
+        echo json_encode($plantas);
+    }
+
+    public function asociarPlanta()
+    {
+        header('Content-Type: application/json');
+        $codigo = isset($_POST['codigo']) ? $_POST['codigo'] : '';
+        $idPlanta = isset($_POST['id_planta']) ? $_POST['id_planta'] : '';
+        if ($codigo && $idPlanta) {
+            try {
+                $this->model->asociarPlanta($codigo, $idPlanta);
+                echo json_encode(["ok" => true, "mensaje" => "Planta asociada correctamente"]);
+            } catch (Exception $e) {
+                echo json_encode(["ok" => false, "mensaje" => "Error: " . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(["ok" => false, "mensaje" => "Datos incompletos"]);
+        }
+    }
+
+    public function eliminarPlantaEspecimen()
+    {
+        header('Content-Type: application/json');
+        $codigo = isset($_GET['codigo']) ? $_GET['codigo'] : '';
+        $idPlanta = isset($_GET['id_planta']) ? $_GET['id_planta'] : '';
+        if ($codigo && $idPlanta) {
+            $this->model->eliminarPlantaEspecimen($codigo, $idPlanta);
+            echo json_encode(["ok" => true, "mensaje" => "Asociación eliminada"]);
+        } else {
+            echo json_encode(["ok" => false, "mensaje" => "Datos incompletos"]);
+        }
+    }
 }

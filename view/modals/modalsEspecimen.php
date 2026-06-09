@@ -99,3 +99,31 @@
         </form>
     </div>
 </div>
+<div id="modalPlantas" class="modal-fondo" style="display:none;">
+    <div class="modal-contenido" style="width: 500px; max-width: 95%;">
+        <h3 style="color: #1E3A5F; margin-bottom: 15px;">Planta Hospedadora</h3>
+
+        <div style="background: #9fbce4; color: #1E3A5F; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="font-size: 16px; margin: 0;">Espécimen: <strong id="txtCodigoPlantas"></strong></p>
+        </div>
+
+        <h4 style="color:#1E3A5F; margin-bottom:8px;">Plantas asociadas</h4>
+        <div id="listaPlantas" style="margin-bottom:20px; min-height:40px;">
+            <p style="color:#999;">Cargando...</p>
+        </div>
+
+        <h4 style="color:#1E3A5F; margin-bottom:8px;">Agregar planta</h4>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <select id="selectNuevaPlanta" style="flex:1;">
+                <option value="">Seleccione una planta</option>
+            </select>
+            <button type="button" style="background:#28a745; padding:8px 16px; margin:0;"
+                onclick="agregarPlantaEspecimen()">Agregar</button>
+        </div>
+
+        <div id="mensajePlantas" style="margin-bottom:10px;"></div>
+
+        <button type="button" style="background:#e74c3c; width:100%; margin:0;"
+            onclick="cerrarModalPlantas()">Cerrar</button>
+    </div>
+</div>

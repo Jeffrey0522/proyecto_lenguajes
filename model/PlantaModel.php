@@ -28,7 +28,7 @@ class PlantaModel
         $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         $consulta->closeCursor();
-        return $resultado;
+        return $this->normalizarFilas($resultado);
     }
 
 
@@ -40,7 +40,49 @@ class PlantaModel
         $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
         $consulta->closeCursor();
-        return $resultado;
+        return $this->normalizarFila($resultado);
+    }
+
+    /**
+     * Normaliza una fila: pasa todas las keys a minúsculas y mapea
+     * variantes con acento o nombres alternos a la forma canónica.
+     * Así el view no depende del nombre exacto que devuelva el SP.
+     */
+    private function normalizarFila($fila)
+    {
+        if (!is_array($fila)) {
+            return $fila;
+        }
+
+        $fila = array_change_key_case($fila, CASE_LOWER);
+
+        $alias = array(
+            'descripción'        => 'descripcion',
+            'desc'               => 'descripcion',
+            'nombre_común'       => 'nombre_comun',
+            'nombrecomun'        => 'nombre_comun',
+            'nombre_científico'  => 'nombre_cientifico',
+            'nombrecientifico'   => 'nombre_cientifico'
+        );
+        foreach ($alias as $orig => $destino) {
+            if (array_key_exists($orig, $fila) && !array_key_exists($destino, $fila)) {
+                $fila[$destino] = $fila[$orig];
+            }
+        }
+
+        return $fila;
+    }
+
+    private function normalizarFilas($filas)
+    {
+        if (!is_array($filas)) {
+            return $filas;
+        }
+        $out = array();
+        foreach ($filas as $fila) {
+            $out[] = $this->normalizarFila($fila);
+        }
+        return $out;
     }
 
     // =====================

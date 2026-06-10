@@ -63,10 +63,10 @@ $busqueda     = isset($busqueda) ? $busqueda : "";
             </thead>
             <tbody>
                 <?php foreach ($plantas as $p) {
-                    $id          = $p['id']                ?? '';
-                    $nombreCom   = $p['nombre_comun']      ?? '';
-                    $nombreCie   = $p['nombre_cientifico'] ?? '';
-                    $descripcion = $p['descripcion']       ?? '';
+                    $id          = isset($p['id'])                ? $p['id']                : '';
+                    $nombreCom   = isset($p['nombre_comun'])      ? $p['nombre_comun']      : '';
+                    $nombreCie   = isset($p['nombre_cientifico']) ? $p['nombre_cientifico'] : '';
+                    $descripcion = isset($p['descripcion'])       ? $p['descripcion']       : '';
                 ?>
                 <tr>
                     <td><span class="code-pill"><?php echo htmlspecialchars($id); ?></span></td>

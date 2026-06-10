@@ -5,6 +5,13 @@ $especimenes          = isset($especimenes) ? $especimenes : array();
 $planta               = isset($planta) ? $planta : null;
 $especimenesAsociados = isset($especimenesAsociados) ? $especimenesAsociados : array();
 $idPlanta             = isset($idPlanta) ? $idPlanta : '';
+
+// Helper compatible con PHP 5.6: devuelve el valor o el default si no existe.
+if (!function_exists('_g')) {
+    function _g($arr, $key, $default = '') {
+        return isset($arr[$key]) ? $arr[$key] : $default;
+    }
+}
 ?>
 
 <div class="page-header">
@@ -21,8 +28,8 @@ $idPlanta             = isset($idPlanta) ? $idPlanta : '';
 <?php if ($planta) { ?>
     <div class="card panel-info">
         <h3>Planta seleccionada</h3>
-        <p><strong>Nombre común:</strong> <?php echo htmlspecialchars($planta['nombre_comun'] ?? ''); ?></p>
-        <p><strong>Nombre científico:</strong> <em><?php echo htmlspecialchars($planta['nombre_cientifico'] ?? ''); ?></em></p>
+        <p><strong>Nombre común:</strong> <?php echo htmlspecialchars(_g($planta, 'nombre_comun')); ?></p>
+        <p><strong>Nombre científico:</strong> <em><?php echo htmlspecialchars(_g($planta, 'nombre_cientifico')); ?></em></p>
         <?php if (!empty($planta['descripcion'])) { ?>
             <p><strong>Descripción:</strong> <?php echo htmlspecialchars($planta['descripcion']); ?></p>
         <?php } ?>
@@ -44,9 +51,9 @@ $idPlanta             = isset($idPlanta) ? $idPlanta : '';
         <tbody>
             <?php foreach ($especimenesAsociados as $ea) { ?>
                 <tr>
-                    <td><span class="code-pill"><?php echo htmlspecialchars($ea['codigo'] ?? ''); ?></span></td>
-                    <td><em><?php echo htmlspecialchars($ea['nombre_cientifico'] ?? ''); ?></em></td>
-                    <td><?php echo htmlspecialchars($ea['nombre_comun'] ?? ''); ?></td>
+                    <td><span class="code-pill"><?php echo htmlspecialchars(_g($ea, 'codigo')); ?></span></td>
+                    <td><em><?php echo htmlspecialchars(_g($ea, 'nombre_cientifico')); ?></em></td>
+                    <td><?php echo htmlspecialchars(_g($ea, 'nombre_comun')); ?></td>
                     <td>
                         <form method="POST"
                               action="?controlador=Planta&accion=eliminarAsociacion"
@@ -54,7 +61,7 @@ $idPlanta             = isset($idPlanta) ? $idPlanta : '';
                               onsubmit="return confirm('¿Deseas eliminar esta asociación?');">
                             <input type="hidden" name="idPlanta" value="<?php echo htmlspecialchars($idPlanta); ?>">
                             <input type="hidden" name="codigoEspecimen"
-                                   value="<?php echo htmlspecialchars($ea['codigo'] ?? ''); ?>">
+                                   value="<?php echo htmlspecialchars(_g($ea, 'codigo')); ?>">
                             <button type="submit" class="btn btn-danger btn-sm">Eliminar asociación</button>
                         </form>
                     </td>
@@ -97,20 +104,20 @@ $idPlanta             = isset($idPlanta) ? $idPlanta : '';
         <tbody>
             <?php foreach ($especimenes as $e) { ?>
                 <tr>
-                    <td><span class="code-pill"><?php echo htmlspecialchars($e['codigo'] ?? ''); ?></span></td>
-                    <td><em><?php echo htmlspecialchars($e['nombre_cientifico'] ?? ''); ?></em></td>
-                    <td><?php echo htmlspecialchars($e['nombre_comun'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($e['gabinete'] ?? '—'); ?></td>
-                    <td><?php echo htmlspecialchars($e['gaveta'] ?? '—'); ?></td>
-                    <td><?php echo htmlspecialchars($e['caja'] ?? '—'); ?></td>
-                    <td><?php echo htmlspecialchars($e['vial'] ?? '—'); ?></td>
+                    <td><span class="code-pill"><?php echo htmlspecialchars(_g($e, 'codigo')); ?></span></td>
+                    <td><em><?php echo htmlspecialchars(_g($e, 'nombre_cientifico')); ?></em></td>
+                    <td><?php echo htmlspecialchars(_g($e, 'nombre_comun')); ?></td>
+                    <td><?php echo htmlspecialchars(_g($e, 'gabinete', '—')); ?></td>
+                    <td><?php echo htmlspecialchars(_g($e, 'gaveta', '—')); ?></td>
+                    <td><?php echo htmlspecialchars(_g($e, 'caja', '—')); ?></td>
+                    <td><?php echo htmlspecialchars(_g($e, 'vial', '—')); ?></td>
                     <td>
                         <form method="POST"
                               action="?controlador=Planta&accion=guardarAsociacion"
                               style="display:inline;">
                             <input type="hidden" name="idPlanta" value="<?php echo htmlspecialchars($idPlanta); ?>">
                             <input type="hidden" name="codigoEspecimen"
-                                   value="<?php echo htmlspecialchars($e['codigo'] ?? ''); ?>">
+                                   value="<?php echo htmlspecialchars(_g($e, 'codigo')); ?>">
                             <button type="submit" class="btn btn-primary btn-sm">Asociar</button>
                         </form>
                     </td>

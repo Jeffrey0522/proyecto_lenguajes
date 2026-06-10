@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio Entomología</title>
+    <title>SA-UCR Entomología</title>
     <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="public/css/gabinete.css">
     <link rel="stylesheet" href="public/css/gaveta.css">
@@ -20,7 +20,7 @@
     <header>
         <nav class="top-nav">
             <div class="nav-logo">
-                <a href="?controlador=Usuario&accion=vistaAdminContenido">Laboratorio Entomología</a>
+                <a href="?controlador=Usuario&accion=vistaAdminContenido">SA-UCR Entomología</a>
             </div>
             <!-- Botones al lado derecho -->
             <div class="nav-buttons nav-right">

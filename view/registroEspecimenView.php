@@ -189,10 +189,6 @@
                                     onclick="abrirModalConfirmacion('<?php echo $e['codigo']; ?>')">
                                     Eliminar
                                 </button>
-                                <button type="button" style="background: #8e44ad; padding: 8px 12px; margin-bottom: 5px; width: 100%; border:none; color:white; border-radius: 4px; cursor: pointer; font-weight: bold;"
-                                    onclick="abrirModalPlantas('<?php echo $e['codigo']; ?>')">
-                                    Planta hospedadora
-                                </button>
                             </td>
                         </tr>
                     <?php }

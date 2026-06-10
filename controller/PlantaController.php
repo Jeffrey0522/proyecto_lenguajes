@@ -13,8 +13,7 @@ class PlantaController
     }
     public function mostrar()
     {
-        session_start();
-        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+        if(!isset($_SESSION['username']) || $_SESSION['username'] == null || $_SESSION['rol'] != '2'){
             header("Location: ?");
             exit();
         }

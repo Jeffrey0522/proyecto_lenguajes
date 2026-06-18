@@ -151,12 +151,28 @@ switch ($accion) {
         $stmt->bindParam(6, $datos['nombre_usuario']);
         try {
             $stmt->execute();
+            
+            // Verificar si hay errores en la ejecución del SP
+            $errorInfo = $stmt->errorInfo();
+            if ($errorInfo[0] != '00000') {
+                http_response_code(400);
+                echo json_encode(["mensaje" => $errorInfo[2]]);
+                $stmt->closeCursor();
+                break;
+            }
+            
             $stmt->closeCursor();
             http_response_code(201);
-            echo json_encode(["mensaje" => "Usuario registrado con éxito"]);
+            echo json_encode(["mensaje" => "Usuario registrado con exito"]);
         } catch (PDOException $e) {
             http_response_code(400);
-            echo json_encode(["mensaje" => "Error al registrar: " . $e->getMessage()]);
+            // Extraer el mensaje real del error del SP
+            $mensaje = $e->getMessage();
+            if (strpos($mensaje, 'El correo ya se encuentra registrado') !== false) {
+                echo json_encode(["mensaje" => "El correo ya se encuentra registrado"]);
+            } else {
+                echo json_encode(["mensaje" => "Error al registrar: " . $mensaje]);
+            }
         }
         break;
 

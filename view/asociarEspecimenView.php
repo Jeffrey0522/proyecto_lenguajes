@@ -14,10 +14,7 @@ if (!function_exists('_g')) {
 }
 ?>
 
-<div class="page-header">
-    <p class="page-eyebrow">Asociaciones</p>
-    <h2>Asociar espécimen a planta</h2>
-</div>
+<h2>Asociar Especie a Planta</h2>
 
 <?php if (isset($mensaje) && $mensaje != null) { ?>
     <div class="alerta alerta-<?php echo htmlspecialchars($tipoMensaje); ?>">
@@ -35,6 +32,63 @@ if (!function_exists('_g')) {
         <?php } ?>
     </div>
 <?php } ?>
+<?php if(isset($especimenesAsociados) && count($especimenesAsociados) > 0){ ?>
+
+<h3>Especies Asociados</h3>
+
+<table border="1">
+
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre Científico</th>
+            <th>Nombre Común</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    <?php foreach($especimenesAsociados as $ea){ ?>
+
+        <tr>
+
+            <td><?php echo $ea['codigo']; ?></td>
+
+            <td><?php echo $ea['nombre_cientifico']; ?></td>
+
+            <td><?php echo $ea['nombre_comun']; ?></td>
+
+            <td>
+
+                <form method="POST"
+                      action="?controlador=Planta&accion=eliminarAsociacion"
+                      style="display:inline;"
+                      onsubmit="return confirm('¿Deseas eliminar esta asociación?');">
+
+                    <input type="hidden"
+                           name="idPlanta"
+                           value="<?php echo $idPlanta; ?>">
+
+                    <input type="hidden"
+                           name="codigoEspecimen"
+                           value="<?php echo isset($ea['codigo']) ? $ea['codigo'] : ''; ?>">
+
+                    <button type="submit">
+                        Eliminar Asociación
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+    <?php } ?>
+
+    </tbody>
+
+</table>
 
 <?php if (isset($especimenesAsociados) && count($especimenesAsociados) > 0) { ?>
 <div class="card card-tabla">
@@ -72,18 +126,93 @@ if (!function_exists('_g')) {
 </div>
 <?php } ?>
 
-<div class="card">
-    <h3>Buscar espécimen</h3>
-    <form method="POST" action="?controlador=planta&accion=buscarEspecimen" class="form-inline">
-        <input type="hidden" name="idPlanta" value="<?php echo htmlspecialchars($idPlanta); ?>">
-        <input type="text"
-               id="busqueda"
-               name="busqueda"
-               placeholder="Buscar por nombre científico"
-               required>
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </form>
-</div>
+<form method="POST"
+      action="?controlador=planta&accion=buscarEspecimen">
+
+    <input type="hidden"
+           name="idPlanta"
+           value="<?php echo $idPlanta; ?>">
+
+    <label for="busqueda">Buscar Especie por Nombre Científico:</label><br>
+    <input type="text"
+           id="busqueda"
+           name="busqueda"
+           placeholder="Ingrese el nombre científico"
+           required>
+
+    <button type="submit">
+        Buscar
+    </button>
+
+</form>
+<?php if(isset($especimenes) && count($especimenes) > 0){ ?>
+
+<h3>Especies Encontradas</h3>
+
+<table border="1" style="width: 100%; margin-top: 20px;">
+
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre Científico</th>
+            <th>Nombre Común</th>
+            <th>Gabinete</th>
+            <th>Gaveta</th>
+            <th>Caja</th>
+            <th>Vial</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    <?php foreach($especimenes as $e){ ?>
+
+        <tr>
+
+            <td><?php echo $e['codigo']; ?></td>
+
+            <td><?php echo $e['nombre_cientifico']; ?></td>
+
+            <td><?php echo $e['nombre_comun']; ?></td>
+
+            <td><?php echo isset($e['gabinete']) ? $e['gabinete'] : '-'; ?></td>
+
+            <td><?php echo isset($e['gaveta']) ? $e['gaveta'] : '-'; ?></td>
+
+            <td><?php echo isset($e['caja']) ? $e['caja'] : '-'; ?></td>
+
+            <td><?php echo isset($e['vial']) ? $e['vial'] : '-'; ?></td>
+
+            <td>
+
+                <form method="POST"
+                      action="?controlador=Planta&accion=guardarAsociacion"
+                      style="display: inline;">
+
+                    <input type="hidden"
+                           name="idPlanta"
+                           value="<?php echo $idPlanta; ?>">
+
+                    <input type="hidden"
+                           name="codigoEspecimen"
+                           value="<?php echo $e['codigo']; ?>">
+
+                    <button type="submit">
+                        Asociar
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+    <?php } ?>
+
+    </tbody>
+
+</table>
 
 <?php if (isset($especimenes) && count($especimenes) > 0) { ?>
 <div class="card card-tabla">

@@ -86,17 +86,16 @@ $busqueda     = isset($busqueda) ? $busqueda : "";
                             <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
                         </form>
 
-                        <div class="acciones-extra">
-                            <a class="link-asociar"
-                               href="?controlador=planta&accion=asociarEspecimen&id=<?php echo urlencode($id); ?>">
-                                Asociar espécimen
-                            </a>
-                            <a class="link-eliminar"
-                               href="?controlador=planta&accion=eliminar&id=<?php echo urlencode($id); ?>"
-                               onclick="return confirm('¿Eliminar esta planta?')">
-                                Eliminar
-                            </a>
-                        </div>
+                        <br>
+
+                        <a href="?controlador=planta&accion=eliminar&id=<?php echo $p['id']; ?>"
+                            onclick="return confirm('¿Eliminar esta planta?')">
+                            Eliminar
+                        </a>
+
+                        <a href="?controlador=planta&accion=asociarEspecimen&id=<?php echo $p['id']; ?>">
+    Asociar Especie
+</a>
                     </td>
                 </tr>
                 <?php } ?>

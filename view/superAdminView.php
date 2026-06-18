@@ -7,6 +7,7 @@ include_once 'public/headerSuperAdmin.php';
 <a href="?controlador=Usuario&accion=formularioCrearUsuario">Crear usuario</a>
 <a href="?controlador=Usuario&accion=formularioCambiarContrasena">Cambiar contraseña</a>
 
+
 <?php if (isset($_SESSION['eliminar_usuario'])): ?>
     <div class="alert alert-danger">
         <?= $_SESSION['eliminar_usuario'];

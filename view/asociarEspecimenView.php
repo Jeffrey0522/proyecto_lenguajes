@@ -15,7 +15,7 @@ $especimenesAsociados = isset($especimenesAsociados)
 
 ?>
 
-<h2>Asociar Especímen a Planta</h2>
+<h2>Asociar Especie a Planta</h2>
 
 <?php if (isset($mensaje) && $mensaje != null) { ?>
     <div class="<?php echo $tipoMensaje; ?>" style="padding: 10px; margin-bottom: 20px; border: 1px solid #ccc;">
@@ -35,7 +35,7 @@ $especimenesAsociados = isset($especimenesAsociados)
 <?php } ?>
 <?php if(isset($especimenesAsociados) && count($especimenesAsociados) > 0){ ?>
 
-<h3>Especímenes Asociados</h3>
+<h3>Especies Asociados</h3>
 
 <table border="1">
 
@@ -100,7 +100,7 @@ $especimenesAsociados = isset($especimenesAsociados)
            name="idPlanta"
            value="<?php echo $idPlanta; ?>">
 
-    <label for="busqueda">Buscar Especímen por Nombre Científico:</label><br>
+    <label for="busqueda">Buscar Especie por Nombre Científico:</label><br>
     <input type="text"
            id="busqueda"
            name="busqueda"
@@ -114,7 +114,7 @@ $especimenesAsociados = isset($especimenesAsociados)
 </form>
 <?php if(isset($especimenes) && count($especimenes) > 0){ ?>
 
-<h3>Especímenes Encontrados</h3>
+<h3>Especies Encontradas</h3>
 
 <table border="1" style="width: 100%; margin-top: 20px;">
 

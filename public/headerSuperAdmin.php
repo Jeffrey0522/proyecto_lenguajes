@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,8 +16,9 @@
 <body>
     <div class="layout">
         <aside class="sidebar">
-            <h2><?php echo $_SESSION['nombreUsuario'] ?>  <?php echo $_SESSION['apellidoUsuario'] ?></h2>
+            <h2><?php echo isset($_SESSION['nombreUsuario']) ? $_SESSION['nombreUsuario'] : 'Usuario'; ?> <?php echo isset($_SESSION['apellidoUsuario']) ? $_SESSION['apellidoUsuario'] : ''; ?></h2>
             <a href="?controlador=Usuario&accion=vistaSuperAdmin">Inicio</a>
+            <a href="?controlador=bitacora&accion=mostrar" >Bitácora</a>   
             <a href="?controlador=Usuario&accion=cerrarSesion">Cerrar sesion</a>
         </aside>
         <main class="contenido">

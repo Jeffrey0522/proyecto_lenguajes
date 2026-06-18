@@ -12,26 +12,30 @@ class PlantaController
         }
     }
     public function mostrar()
-{
-    $planta = new PlantaModel();
+    {
+        if(!isset($_SESSION['username']) || $_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
+        $planta = new PlantaModel();
 
-    $busqueda = isset($_POST['busqueda']) ? trim($_POST['busqueda']) : "";
+        $busqueda = isset($_POST['busqueda']) ? trim($_POST['busqueda']) : "";
 
-    $data['mensaje'] = null;
-    $data['tipoMensaje'] = null;
+        $data['mensaje'] = null;
+        $data['tipoMensaje'] = null;
 
-    if ($busqueda != "") {
-        $data['plantas'] = $planta->listar($busqueda);
-        $data['mostrarTabla'] = true;
-    } else {
-        $data['plantas'] = array();
-        $data['mostrarTabla'] = false;
+        if ($busqueda != "") {
+            $data['plantas'] = $planta->listar($busqueda);
+            $data['mostrarTabla'] = true;
+        } else {
+            $data['plantas'] = array();
+            $data['mostrarTabla'] = false;
+        }
+
+        $data['busqueda'] = $busqueda;
+
+        $this->view->show("plantaView.php", $data);
     }
-
-    $data['busqueda'] = $busqueda;
-
-    $this->view->show("plantaView.php", $data);
-}
 
     // =====================
     // REGISTRAR
@@ -45,24 +49,26 @@ class PlantaController
         $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
 
         if ($nombre_comun != "" && $nombre_cientifico != "") {
-
-            $planta->registrar($nombre_comun, $nombre_cientifico, $descripcion);
-
-            $data['mensaje'] = "Planta registrada correctamente.";
-            $data['tipoMensaje'] = "exito";
-
+            try {
+                $planta->registrar($nombre_comun, $nombre_cientifico, $descripcion);
+                $data['mensaje'] = "Planta registrada correctamente.";
+                $data['tipoMensaje'] = "exito";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: ya existe una planta con ese nombre científico.";
+                $data['tipoMensaje'] = "error";
+            }
         } else {
             $data['mensaje'] = "Nombre común y científico son obligatorios.";
             $data['tipoMensaje'] = "error";
         }
 
-        $data['plantas'] = $planta->listar();
+        $busqueda = "";
+        $data['plantas'] = $planta->listar($busqueda);
+        $data['busqueda'] = $busqueda;
+        $data['mostrarTabla'] = true;
         $this->view->show("plantaView.php", $data);
     }
 
-    // =====================
-    // ACTUALIZAR
-    // =====================
     public function actualizar()
     {
         $planta = new PlantaModel();
@@ -73,18 +79,23 @@ class PlantaController
         $descripcion = isset($_POST['descripcion']) ? trim($_POST['descripcion']) : "";
 
         if ($id != "" && $nombre_comun != "" && $nombre_cientifico != "") {
-
-            $planta->actualizar($id, $nombre_comun, $nombre_cientifico, $descripcion);
-
-            $data['mensaje'] = "Planta actualizada correctamente.";
-            $data['tipoMensaje'] = "exito";
-
+            try {
+                $planta->actualizar($id, $nombre_comun, $nombre_cientifico, $descripcion);
+                $data['mensaje'] = "Planta actualizada correctamente.";
+                $data['tipoMensaje'] = "exito";
+            } catch (Exception $e) {
+                $data['mensaje'] = "Error: ya existe una planta con ese nombre científico.";
+                $data['tipoMensaje'] = "error";
+            }
         } else {
             $data['mensaje'] = "Debe completar todos los campos obligatorios.";
             $data['tipoMensaje'] = "error";
         }
 
-        $data['plantas'] = $planta->listar();
+        $busqueda = "";
+        $data['plantas'] = $planta->listar($busqueda);
+        $data['busqueda'] = $busqueda;
+        $data['mostrarTabla'] = true;
         $this->view->show("plantaView.php", $data);
     }
 
@@ -103,7 +114,6 @@ class PlantaController
 
             $data['mensaje'] = "Planta eliminada correctamente.";
             $data['tipoMensaje'] = "exito";
-
         } else {
             $data['mensaje'] = "No se recibió el ID.";
             $data['tipoMensaje'] = "error";
@@ -114,108 +124,108 @@ class PlantaController
     }
 
     public function asociarEspecimen()
-{
-    $planta = new PlantaModel();
-    $idPlanta = $_GET['id'];
+    {
+        $planta = new PlantaModel();
+        $idPlanta = $_GET['id'];
 
-    $plantaData = $planta->obtener($idPlanta);
-    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+        $plantaData = $planta->obtener($idPlanta);
+        $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
 
-    $data['idPlanta'] = $idPlanta;
-    $data['planta'] = $plantaData;
-    $data['especimenes'] = array();
-    $data['especimenesAsociados'] = $especimenesAsociados;
+        $data['idPlanta'] = $idPlanta;
+        $data['planta'] = $plantaData;
+        $data['especimenes'] = array();
+        $data['especimenesAsociados'] = $especimenesAsociados;
 
-    $this->view->show("asociarEspecimenView.php", $data);
-}
-
-public function buscarEspecimen()
-{
-    $planta = new PlantaModel();
-
-    $busqueda = $_POST['busqueda'];
-    $idPlanta = $_POST['idPlanta'];
-
-    $plantaData = $planta->obtener($idPlanta);
-    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
-
-    $data['idPlanta'] = $idPlanta;
-    $data['planta'] = $plantaData;
-    $data['especimenes'] = $planta->buscarPorNombreCientifico($busqueda);
-    $data['especimenesAsociados'] = $especimenesAsociados;
-
-    $this->view->show("asociarEspecimenView.php", $data);
-}
-
-public function guardarAsociacion()
-{
-    $planta = new PlantaModel();
-
-    $codigoEspecimen = $_POST['codigoEspecimen'];
-    $idPlanta = $_POST['idPlanta'];
-
-    $resultado = $planta->asociarEspecimen(
-        $codigoEspecimen,
-        $idPlanta
-    );
-
-    if ($resultado) {
-        $data['mensaje'] =
-            "Especímen asociado a la planta correctamente.";
-        $data['tipoMensaje'] = "exito";
-    } else {
-        $data['mensaje'] =
-            "Error al asociar el especímen.";
-        $data['tipoMensaje'] = "error";
+        $this->view->show("asociarEspecimenView.php", $data);
     }
 
-    $plantaData = $planta->obtener($idPlanta);
-    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+    public function buscarEspecimen()
+    {
+        $planta = new PlantaModel();
 
-    $data['idPlanta'] = $idPlanta;
-    $data['planta'] = $plantaData;
-    $data['especimenes'] = array();
-    $data['especimenesAsociados'] = $especimenesAsociados;
+        $busqueda = $_POST['busqueda'];
+        $idPlanta = $_POST['idPlanta'];
 
-    $this->view->show(
-        "asociarEspecimenView.php",
-        $data
-    );
-}
+        $plantaData = $planta->obtener($idPlanta);
+        $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
 
-public function eliminarAsociacion()
-{
-    $planta = new PlantaModel();
+        $data['idPlanta'] = $idPlanta;
+        $data['planta'] = $plantaData;
+        $data['especimenes'] = $planta->buscarPorNombreCientifico($busqueda);
+        $data['especimenesAsociados'] = $especimenesAsociados;
 
-    $codigoEspecimen = $_POST['codigoEspecimen'];
-    $idPlanta = $_POST['idPlanta'];
-
-    $resultado = $planta->eliminarAsociacion(
-        $codigoEspecimen,
-        $idPlanta
-    );
-
-    if ($resultado) {
-        $data['mensaje'] =
-            "Asociación eliminada correctamente.";
-        $data['tipoMensaje'] = "exito";
-    } else {
-        $data['mensaje'] =
-            "Error al eliminar la asociación.";
-        $data['tipoMensaje'] = "error";
+        $this->view->show("asociarEspecimenView.php", $data);
     }
 
-    $plantaData = $planta->obtener($idPlanta);
-    $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+    public function guardarAsociacion()
+    {
+        $planta = new PlantaModel();
 
-    $data['idPlanta'] = $idPlanta;
-    $data['planta'] = $plantaData;
-    $data['especimenes'] = array();
-    $data['especimenesAsociados'] = $especimenesAsociados;
+        $codigoEspecimen = $_POST['codigoEspecimen'];
+        $idPlanta = $_POST['idPlanta'];
 
-    $this->view->show(
-        "asociarEspecimenView.php",
-        $data
-    );
-}
+        $resultado = $planta->asociarEspecimen(
+            $codigoEspecimen,
+            $idPlanta
+        );
+
+        if ($resultado) {
+            $data['mensaje'] =
+                "Especímen asociado a la planta correctamente.";
+            $data['tipoMensaje'] = "exito";
+        } else {
+            $data['mensaje'] =
+                "Error al asociar el especímen.";
+            $data['tipoMensaje'] = "error";
+        }
+
+        $plantaData = $planta->obtener($idPlanta);
+        $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+        $data['idPlanta'] = $idPlanta;
+        $data['planta'] = $plantaData;
+        $data['especimenes'] = array();
+        $data['especimenesAsociados'] = $especimenesAsociados;
+
+        $this->view->show(
+            "asociarEspecimenView.php",
+            $data
+        );
+    }
+
+    public function eliminarAsociacion()
+    {
+        $planta = new PlantaModel();
+
+        $codigoEspecimen = $_POST['codigoEspecimen'];
+        $idPlanta = $_POST['idPlanta'];
+
+        $resultado = $planta->eliminarAsociacion(
+            $codigoEspecimen,
+            $idPlanta
+        );
+
+        if ($resultado) {
+            $data['mensaje'] =
+                "Asociación eliminada correctamente.";
+            $data['tipoMensaje'] = "exito";
+        } else {
+            $data['mensaje'] =
+                "Error al eliminar la asociación.";
+            $data['tipoMensaje'] = "error";
+        }
+
+        $plantaData = $planta->obtener($idPlanta);
+        $especimenesAsociados = $planta->verEspecimenesAsociados($plantaData['nombre_cientifico']);
+
+        $data['idPlanta'] = $idPlanta;
+        $data['planta'] = $plantaData;
+        $data['especimenes'] = array();
+        $data['especimenesAsociados'] = $especimenesAsociados;
+
+        $this->view->show(
+            "asociarEspecimenView.php",
+            $data
+        );
+    }
 }

@@ -11,6 +11,7 @@ require 'libs/configuration.php';
 require_once 'libs/SPDO.php';
 
 $db = SPDO::singleton();
+$db->exec("SET NAMES utf8");
 $accion = isset($_GET['accion']) ? $_GET['accion'] : '';
 
 switch ($accion) {

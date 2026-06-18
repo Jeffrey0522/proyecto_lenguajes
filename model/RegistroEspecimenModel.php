@@ -190,7 +190,7 @@ class RegistroEspecimenModel
 
     public function resolverTaxonomiaSP($id_orden, $id_familia, $id_subfamilia, $id_genero, $id_especie, $id_usuario)
     {
-        
+
         $consulta = $this->db->prepare("CALL sp_resolver_taxonomia(?, ?, ?, ?, ?, ?, @out_id)");
 
         // Si el procedimiento falla internamente, lo atrapa

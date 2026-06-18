@@ -20,10 +20,16 @@ class GeneroController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $generos = $this->model->listarGeneros();
         $familias = $this->familiaModel->listarFamilias();
         $subfamilias = $this->subFamiliaModel->listarSubFamilias();
         require_once 'view/generoView.php';
+        exit();
     }
 
     public function registrar()

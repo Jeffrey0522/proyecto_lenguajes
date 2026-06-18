@@ -11,6 +11,11 @@ class cajaController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $caja = new cajaModel();
 
         $data['cajas'] = $caja->listar();

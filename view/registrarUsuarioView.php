@@ -2,6 +2,13 @@
 include_once 'public/headerSuperAdmin.php';
 ?>
 
+<?php if (isset($_SESSION['registrar_usuario'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['registrar_usuario'];
+        unset($_SESSION['registrar_usuario']); ?>
+    </div>
+<?php endif; ?>
+
 <section>
     <h1>Register</h1>
     <form action="?controlador=Usuario&accion=registrarUsuario" method="post">

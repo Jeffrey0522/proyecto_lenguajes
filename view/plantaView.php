@@ -1,97 +1,89 @@
 <?php include_once 'public/headerAdminContenido.php'; ?>
 
 <?php
-$plantas = isset($plantas) ? $plantas : array();
+$plantas      = isset($plantas) ? $plantas : array();
 $mostrarTabla = isset($mostrarTabla) ? $mostrarTabla : false;
-$busqueda = isset($busqueda) ? $busqueda : "";
+$busqueda     = isset($busqueda) ? $busqueda : "";
 ?>
 
-<h2>Gestión de Plantas</h2>
-
+<div class="page-header">
+    <p class="page-eyebrow">Catálogo</p>
+    <h2>Gestión de plantas</h2>
+</div>
 
 <?php if (isset($mensaje) && $mensaje != null) { ?>
-    <div class="<?php echo $tipoMensaje; ?>">
-        <?php echo $mensaje; ?>
+    <div class="alerta alerta-<?php echo htmlspecialchars($tipoMensaje); ?>">
+        <?php echo htmlspecialchars($mensaje); ?>
     </div>
 <?php } ?>
 
+<div class="card">
+    <h3>Registrar nueva planta</h3>
+    <form method="POST" action="?controlador=planta&accion=registrar" class="form-grid">
+        <div class="form-row">
+            <label>Nombre común</label>
+            <input type="text" name="nombre_comun" required>
+        </div>
+        <div class="form-row">
+            <label>Nombre científico</label>
+            <input type="text" name="nombre_cientifico" required>
+        </div>
+        <div class="form-row form-row-wide">
+            <label>Descripción</label>
+            <input type="text" name="descripcion" placeholder="Opcional">
+        </div>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary">Registrar planta</button>
+        </div>
+    </form>
+</div>
 
-<form method="POST" action="?controlador=planta&accion=registrar">
-
-    <label>Nombre común:</label>
-    <input type="text" name="nombre_comun" required>
-
-    <label>Nombre científico:</label>
-    <input type="text" name="nombre_cientifico" required>
-
-    <label>Descripción:</label>
-    <input type="text" name="descripcion">
-
-    <button type="submit">Registrar Planta</button>
-</form>
-
-<br>
-
-<form method="POST" action="?controlador=planta&accion=mostrar">
-
-    <input type="text"
-        name="busqueda"
-        placeholder="Buscar por nombre común o científico"
-        value="<?php echo $busqueda; ?>">
-
-    <button type="submit">Buscar</button>
-</form>
-
-<br>
-
+<div class="card">
+    <h3>Buscar planta</h3>
+    <form method="POST" action="?controlador=planta&accion=mostrar" class="form-inline">
+        <input type="text"
+               name="busqueda"
+               placeholder="Buscar por nombre común o científico"
+               value="<?php echo htmlspecialchars($busqueda); ?>">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+</div>
 
 <?php if ($mostrarTabla) { ?>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre común</th>
-                <th>Nombre científico</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php foreach ($plantas as $p) { ?>
+    <div class="card card-tabla">
+        <table class="tabla-elegante">
+            <thead>
                 <tr>
-                    <td><?php echo $p['id']; ?></td>
-                    <td><?php echo $p['nombre_comun']; ?></td>
-                    <td><?php echo $p['nombre_cientifico']; ?></td>
-                    <td><?php echo $p['descripcion']; ?></td>
-
-                    <td>
-
-                        <form method="POST" action="?controlador=planta&accion=actualizar">
-
-                            <input type="hidden"
-                                name="id"
-                                value="<?php echo $p['id']; ?>">
-
-                            <input type="text"
-                                name="nombre_comun"
-                                value="<?php echo $p['nombre_comun']; ?>"
-                                required>
-
-                            <input type="text"
-                                name="nombre_cientifico"
-                                value="<?php echo $p['nombre_cientifico']; ?>"
-                                required>
-
-                            <input type="text"
-                                name="descripcion"
-                                value="<?php echo $p['descripcion']; ?>">
-
-                            <button type="submit">
-                                Actualizar
-                            </button>
-
+                    <th>ID</th>
+                    <th>Nombre común</th>
+                    <th>Nombre científico</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($plantas as $p) {
+                    $id          = isset($p['id'])                ? $p['id']                : '';
+                    $nombreCom   = isset($p['nombre_comun'])      ? $p['nombre_comun']      : '';
+                    $nombreCie   = isset($p['nombre_cientifico']) ? $p['nombre_cientifico'] : '';
+                    $descripcion = isset($p['descripcion'])       ? $p['descripcion']       : '';
+                ?>
+                <tr>
+                    <td><span class="code-pill"><?php echo htmlspecialchars($id); ?></span></td>
+                    <td><?php echo htmlspecialchars($nombreCom); ?></td>
+                    <td><em><?php echo htmlspecialchars($nombreCie); ?></em></td>
+                    <td class="td-desc"><?php echo $descripcion !== '' ? htmlspecialchars($descripcion) : '<span class="texto-mudo">—</span>'; ?></td>
+                    <td class="td-acciones">
+                        <form method="POST" action="?controlador=planta&accion=actualizar" class="form-acciones">
+                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($id); ?>">
+                            <input type="text" name="nombre_comun"
+                                   value="<?php echo htmlspecialchars($nombreCom); ?>" required>
+                            <input type="text" name="nombre_cientifico"
+                                   value="<?php echo htmlspecialchars($nombreCie); ?>" required>
+                            <input type="text" name="descripcion"
+                                   value="<?php echo htmlspecialchars($descripcion); ?>"
+                                   placeholder="Descripción">
+                            <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
                         </form>
 
                         <br>
@@ -106,10 +98,10 @@ $busqueda = isset($busqueda) ? $busqueda : "";
 </a>
                     </td>
                 </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 <?php } ?>
 
 <?php include_once 'public/footer.php'; ?>

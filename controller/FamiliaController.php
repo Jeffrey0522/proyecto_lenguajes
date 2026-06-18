@@ -17,9 +17,15 @@ class FamiliaController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $familias = $this->model->listarFamilias();
         $ordenes = $this->ordenModel->listarOrdenes();
         require_once 'view/familiaView.php';
+        exit();
     }
 
     public function registrar()

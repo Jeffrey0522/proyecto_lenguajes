@@ -14,8 +14,14 @@ class OrdenController
 
     public function mostrar()
     {
+        session_start();
+        if($_SESSION['username'] == null || $_SESSION['rol'] != '2'){
+            header("Location: ?");
+            exit();
+        }
         $ordenes = $this->model->listarOrdenes();
         require_once 'view/ordenView.php';
+        exit();
     }
 
     public function registrar()

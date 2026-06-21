@@ -47,4 +47,15 @@ class ComentarioModel
         $consulta->closeCursor();
         return $resultado;
     }
+
+    public function obtenerCedulaPorUsername($username)
+    {
+        $consulta = $this->db->prepare(
+            "SELECT cedula FROM usuarios WHERE nombre_usuario = ?"
+        );
+        $consulta->execute(array($username));
+        $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+        $consulta->closeCursor();
+        return $resultado ? $resultado['cedula'] : null;
+    }
 }

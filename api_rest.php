@@ -301,18 +301,48 @@ switch ($accion) {
         break;
 
     // =====================================================================
-    //  HU-21 (Dev 5): BÚSQUEDA POR NOMBRE CIENTÍFICO
+    //  HU-21 (Dev 5): BÚSQUEDA POR NOMBRE CIENTÍFICO O COMÚN
     // =====================================================================
 
     case 'buscar_nombre':
         $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
         $offset   = isset($_GET['offset'])   ? (int)$_GET['offset'] : 0;
         $limit    = isset($_GET['limit'])    ? (int)$_GET['limit']  : 10;
+        $like     = '%' . strtolower($busqueda) . '%';
 
-        $stmt = $db->prepare("CALL sp_buscar_especimen_por_nombre(?, ?, ?)");
-        $stmt->bindParam(1, $busqueda);
-        $stmt->bindParam(2, $offset, PDO::PARAM_INT);
-        $stmt->bindParam(3, $limit, PDO::PARAM_INT);
+        $sql = "SELECT
+                    e.codigo,
+                    esp.nombre_cientifico,
+                    esp.nombre_comun,
+                    gb.codigo AS gabinete,
+                    gv.codigo AS gaveta,
+                    cj.codigo AS caja,
+                    v.codigo  AS vial,
+                    (
+                        SELECT COUNT(*)
+                        FROM especimenes e2
+                        LEFT JOIN especies esp2 ON e2.id_especie = esp2.id
+                        WHERE LOWER(esp2.nombre_cientifico) LIKE :b1
+                           OR LOWER(esp2.nombre_comun)      LIKE :b2
+                    ) AS total_registros
+                FROM especimenes e
+                LEFT JOIN especies   esp ON e.id_especie       = esp.id
+                LEFT JOIN gavetas    gv  ON e.codigo_gaveta    = gv.codigo
+                LEFT JOIN gabinetes  gb  ON gv.codigo_gabinete = gb.codigo
+                LEFT JOIN viales     v   ON e.codigo_vial      = v.codigo
+                LEFT JOIN cajas      cj  ON v.codigo_caja      = cj.codigo
+                WHERE LOWER(esp.nombre_cientifico) LIKE :b3
+                   OR LOWER(esp.nombre_comun)      LIKE :b4
+                ORDER BY esp.nombre_cientifico
+                LIMIT :off, :lim";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':b1', $like);
+        $stmt->bindValue(':b2', $like);
+        $stmt->bindValue(':b3', $like);
+        $stmt->bindValue(':b4', $like);
+        $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':lim', $limit,  PDO::PARAM_INT);
         $stmt->execute();
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();

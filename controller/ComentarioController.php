@@ -1,7 +1,6 @@
 <?php
 
 require_once 'model/ComentarioModel.php';
-require_once 'model/UsuarioModel.php';
 
 class ComentarioController
 {
@@ -70,9 +69,7 @@ class ComentarioController
         }
 
         try {
-            $usuario      = new UsuarioModel();
-            $datosAdmin   = $usuario->buscarUsuario($_SESSION['username']);
-            $cedulaAdmin  = isset($datosAdmin['cedula']) ? $datosAdmin['cedula'] : null;
+            $cedulaAdmin = $this->comentario->obtenerCedulaPorUsername($_SESSION['username']);
 
             if (!$cedulaAdmin) {
                 throw new Exception("No se pudo identificar al administrador.");

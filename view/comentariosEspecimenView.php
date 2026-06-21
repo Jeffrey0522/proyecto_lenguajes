@@ -50,12 +50,12 @@ $codigoEspecimen = isset($codigoEspecimen) ? $codigoEspecimen : '';
                         </td>
                         <td class="td-desc"><?php echo nl2br(htmlspecialchars($texto)); ?></td>
                         <td class="td-acciones">
-                            <a class="btn btn-primary btn-sm"
-                               style="background:#b03030;"
-                               href="?controlador=Comentario&accion=eliminar&id=<?php echo (int)$id; ?>&codigo=<?php echo urlencode($codigoEspecimen); ?>"
-                               onclick="return confirm('¿Eliminar este comentario? Esta acción no se puede deshacer.');">
+                            <button type="button"
+                                    class="btn btn-primary btn-sm"
+                                    style="background:#b03030;"
+                                    onclick="abrirModalEliminarComentario(<?php echo (int)$id; ?>, '<?php echo htmlspecialchars(addslashes(mb_substr($texto, 0, 80))); ?>')">
                                 Eliminar
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -63,5 +63,56 @@ $codigoEspecimen = isset($codigoEspecimen) ? $codigoEspecimen : '';
         </table>
     <?php } ?>
 </div>
+
+<!-- Modal de confirmación -->
+<div id="modalEliminarComentario" class="modal" style="display:none;">
+    <div class="modal-box">
+        <h2>Eliminar comentario</h2>
+        <div class="linea"></div>
+        <p>
+            ¿Está seguro que desea eliminar este comentario?<br>
+            <em id="modalComentarioPreview" style="color:#4A6080;"></em><br>
+            Esta acción no se puede deshacer.
+        </p>
+        <div class="modal-botones">
+            <button type="button" class="btn-cancelar" onclick="cerrarModalEliminarComentario()">
+                Cancelar
+            </button>
+            <form id="modalEliminarForm" method="GET" action="index.php" style="width:50%;margin:0;">
+                <input type="hidden" name="controlador" value="Comentario">
+                <input type="hidden" name="accion" value="eliminar">
+                <input type="hidden" name="id" id="modalEliminarId" value="">
+                <input type="hidden" name="codigo" id="modalEliminarCodigo" value="">
+                <button type="submit" class="btn-peligro" style="width:100%;">
+                    Eliminar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CODIGO_ESPECIMEN_ACTUAL = '<?php echo htmlspecialchars($codigoEspecimen, ENT_QUOTES); ?>';
+
+    function abrirModalEliminarComentario(idComentario, previewTexto) {
+        const modal   = document.getElementById('modalEliminarComentario');
+        const preview = document.getElementById('modalComentarioPreview');
+
+        document.getElementById('modalEliminarId').value     = idComentario;
+        document.getElementById('modalEliminarCodigo').value = CODIGO_ESPECIMEN_ACTUAL;
+
+        preview.textContent = previewTexto ? '“' + previewTexto + (previewTexto.length >= 80 ? '…' : '') + '”' : '';
+
+        modal.style.display = 'flex';
+    }
+
+    function cerrarModalEliminarComentario() {
+        document.getElementById('modalEliminarComentario').style.display = 'none';
+    }
+
+    document.getElementById('modalEliminarComentario').addEventListener('click', function (e) {
+        if (e.target === this) cerrarModalEliminarComentario();
+    });
+</script>
 
 <?php include_once 'public/footer.php'; ?>

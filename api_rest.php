@@ -490,7 +490,26 @@ switch ($accion) {
 
     case 'obtener_carrito':
         $cedula = isset($_GET['cedula']) ? $_GET['cedula'] : '';
-        $stmt = $db->prepare("CALL sp_obtener_carrito(?)");
+
+        $sql = "SELECT
+                    e.codigo,
+                    COALESCE(esp.nombre_cientifico, 'SP') AS nombre_cientifico,
+                    COALESCE(esp.nombre_comun, '')        AS nombre_comun,
+                    gb.codigo AS gabinete,
+                    gv.codigo AS gaveta,
+                    cj.codigo AS caja,
+                    v.codigo  AS vial
+                FROM carrito_busquedas c
+                INNER JOIN especimenes e   ON c.codigo_especimen = e.codigo
+                LEFT  JOIN especies    esp ON e.id_especie       = esp.id
+                LEFT  JOIN gavetas     gv  ON e.codigo_gaveta    = gv.codigo
+                LEFT  JOIN gabinetes   gb  ON gv.codigo_gabinete = gb.codigo
+                LEFT  JOIN viales      v   ON e.codigo_vial      = v.codigo
+                LEFT  JOIN cajas       cj  ON v.codigo_caja      = cj.codigo
+                WHERE c.cedula_usuario = ?
+                ORDER BY gb.codigo, gv.codigo, cj.codigo, v.codigo";
+
+        $stmt = $db->prepare($sql);
         $stmt->bindParam(1, $cedula);
         $stmt->execute();
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
